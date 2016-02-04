@@ -129,6 +129,8 @@
                 
              </div><!-- LINHA DE NOVAS MENSAGENS -->
              
+             <c:if test="${user.cargo.codigo == 1}" >
+             
              <div class="row">
              	<div class="col-md-12">
              		
@@ -190,6 +192,8 @@
              		
              	</div>
              </div>
+
+			</c:if>
 
              </div>
                 <!-- /.col-lg-7 -->

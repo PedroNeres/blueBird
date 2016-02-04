@@ -47,7 +47,10 @@ public class TipoOrdemDAO {
 			tipoOrdem.setDescricao(rs.getString("ds_descricao"));
 			tipos.add(tipoOrdem);
 		}
+		rs.close();
+		estrutura.close();
 		return tipos;
+		
 	}
 	
 	public TipoOrdemServico pesqCodigo(int codigo, Connection c)throws Exception{
@@ -60,6 +63,8 @@ public class TipoOrdemDAO {
 			tipoOrdem.setCodigo(rs.getInt("cd_tipo_ordem"));
 			tipoOrdem.setDescricao(rs.getString("ds_descricao"));
 		}
+		rs.close();
+		estrutura.close();
 		return tipoOrdem;
 	}
 	
@@ -73,6 +78,8 @@ public class TipoOrdemDAO {
 			tipoOrdem.setCodigo(rs.getInt("cd_tipo_ordem"));
 			tipoOrdem.setDescricao(rs.getString("ds_descricao"));
 		}
+		rs.close();
+		estrutura.close();
 		return tipoOrdem;
 	}
 

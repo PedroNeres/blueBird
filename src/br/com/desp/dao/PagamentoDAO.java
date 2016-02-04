@@ -94,23 +94,16 @@ public class PagamentoDAO {
 		String sql = "SELECT * FROM T_DESP_PAGAMENTO WHERE nr_ordem = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		estrutura.setInt(1, nrOrdem);
-		System.out.println("aaui");
+		
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			pag = new Pagamento();
-			System.out.println("aqui1");
 			pag.setCodigo(rs.getInt("cd_pagamento"));
-			System.out.println("aqui2");
 			pag.setForPagamento(FormaPagamentoBO.pesqCodigo(rs.getInt("cd_forma_pagamento"), c));
-			System.out.println("aqui3");
 			pag.setNumero(rs.getString("nr_identificacao"));
-			System.out.println("aqui4");
 			pag.setObservacoes(rs.getString("ds_observacao"));
-			System.out.println("aqui5");
 			pag.setStatus(rs.getInt("nr_status"));
-			System.out.println("aqui6");
 			pag.setVlPagao(rs.getDouble("vl_pago"));
-			System.out.println("aqui7");
 			pagamentos.add(pag);
 		}
 		rs.close();

@@ -144,6 +144,8 @@ public class ClienteDAO {
 			cli.setTelefone(pes.getTelefone());
 			cli.setUsuario(pes.getUsuario());
 		}
+		rs.close();
+		estrutura.close();
 		return cli;
 	}
 	
@@ -164,6 +166,8 @@ public class ClienteDAO {
 			cli.setTelefone(pes.getTelefone());
 			cli.setUsuario(pes.getUsuario());
 		}
+		rs.close();
+		estrutura.close();
 		return cli;
 	}
 	

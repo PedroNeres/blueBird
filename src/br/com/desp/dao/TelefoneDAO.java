@@ -29,8 +29,8 @@ public class TelefoneDAO {
 			tel.setCodigo(resultado.getInt("cd_fone"));
 			tels.add(tel);
 		}
-		resultado.close();
 		estrutura.close();
+		resultado.close();
 		return tels;
 	}
 	
@@ -100,8 +100,9 @@ public class TelefoneDAO {
 		while(resultado.next()){
 			tipos.add(resultado.getInt("cd_tipo_fone"));
 		}
-		estrutura.close();
 		resultado.close();
+		estrutura.close();
+
 		return tipos;
 		
 	}

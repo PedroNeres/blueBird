@@ -47,6 +47,8 @@ public class TipoVeiculoDAO {
 			tv.setDescricao(rs.getString("ds_tipo"));
 			tipos.add(tv);
 		}
+		rs.close();
+		estrutura.close();
 		return tipos;
 	}
 	
@@ -60,6 +62,8 @@ public class TipoVeiculoDAO {
 			tv.setCodigo(rs.getInt("cd_tipo"));
 			tv.setDescricao(rs.getString("ds_tipo"));
 		}
+		rs.close();
+		estrutura.close();
 		return tv;
 	}
 	
@@ -73,6 +77,8 @@ public class TipoVeiculoDAO {
 			tv.setCodigo(rs.getInt("cd_tipo"));
 			tv.setDescricao(rs.getString("ds_tipo"));
 		}
+		rs.close();
+		estrutura.close();
 		return tv;
 	}
 

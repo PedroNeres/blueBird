@@ -40,7 +40,7 @@ public class PessoaDAO {
 	}
 	
 	public void atualizar(Pessoa pes, Connection c)throws Exception{
-		String sql = "UPDATE T_DESP_PESSOA SET nm_pessoa = ? "
+		String sql = "UPDATE T_DESP_PESSOA SET nm_pessoa = ?"
 				+ "WHERE cd_pessoa = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		
@@ -49,7 +49,6 @@ public class PessoaDAO {
 		estrutura.execute();
 		estrutura.close();
 		EnderecoBO.atualizar(pes.getEndereco(), c, pes.getCodigo());
-		
 	}
 	
 	public void excluir(Pessoa pes, Connection c)throws Exception{

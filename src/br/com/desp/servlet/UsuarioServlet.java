@@ -107,6 +107,7 @@ public class UsuarioServlet extends HttpServlet {
 			break;
 		case "alterarSenha":
 			alterarSenha(req);
+			carregarHome(req);
 			retorno = "home.jsp";
 			break;
 		}
@@ -124,29 +125,35 @@ public class UsuarioServlet extends HttpServlet {
 			Usuario usu = new Usuario();
 			usu.setEmail(req.getParameter("email"));
 			usu.setPassword(req.getParameter("senha"));
+			String confSenha = req.getParameter("confSenha");
+			
+			System.out.println(usu.getPassword());
+			System.out.println(confSenha);
 			
 			Pessoa pes = PessoaBO.pesqEmail(usu.getEmail(), c);
-			if(pes.getNome() == null){
-				req.setAttribute("erro", "O usuário que esta tentando alterar senha não existe");
-			}else if(!pes.getUsuario().getPassword().equals(req.getParameter("antigaSenha"))){
+			if(!pes.getUsuario().getPassword().equals(req.getParameter("antigaSenha"))){
 				req.setAttribute("erro", "A senha antiga esta incorreta, você precisa saber a senha"
 						+ " antiga para poder alterá-la!");
-			}else if(!usu.getPassword().equals(req.getAttribute("confSenha"))){
+			}else if(!usu.getPassword().equals(confSenha)){
 				req.setAttribute("erro", "A confirmação de senha não confere!");
 			}else{
 				UsuarioBO.alterarSenha(usu, c);
 				req.setAttribute("msg", "Sua senha foi alterada com sucesso!");
 			}
-			carregarHome(req);
+				
+			
+			
 			c.commit();
 			c.setAutoCommit(true);
 		}catch(Exception e){
 			try {
 				c.rollback();
 				req.setAttribute("erro", e.getMessage());
+				e.printStackTrace();
 			} catch (Exception e2) {
 				// TODO: handle exception
 				req.setAttribute("erro", e2.getMessage());
+				e2.printStackTrace();
 			}
 		}
 		

@@ -66,11 +66,11 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                    	<li><a href="#"><i class="fa fa-user fa-fw"></i>${user.nome }</a></li>
+                    	<li><a href="#"><i class="fa fa-user fa-fw"></i>${user.nome } - ${user.cargo.codigo }</a></li>
                     	<li class="divider"></li>
                         <li><a href="#"><i class="fa fa-pencil fa-fw"></i> Editar Perfil</a>
                         </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Alterar Senha</a>
+                        <li><a href="" data-toggle="modal" data-target="#ModalAlterarSenha"><i class="fa fa-gear fa-fw"></i> Alterar Senha</a>
                         </li>
                         <li class="divider"></li>
                         <li><a href="usuario?acao=logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
@@ -134,6 +134,8 @@
                             <!-- /.nav-second-level -->
                         </li>
                         
+                        <c:if test="${user.cargo.codigo == 1 }">
+                        
                         <li>
                             <a href="#"><i class="fa fa-user fa-fw"></i> Usuários<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -149,6 +151,8 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+                        
+                        </c:if>
                         
                         <li>
                             <a href="#"><i class="fa fa-gears fa-fw"></i> Configurar <span class="fa arrow"></span></a>
@@ -245,4 +249,5 @@
             <%@include file="cadFormaPagamento.jsp" %>
             <%@include file="cadCargo.jsp" %>
             <%@include file="cadTipoStatus.jsp" %>
+            <%@include file="alterarSenha.jsp" %>
       

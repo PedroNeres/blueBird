@@ -476,6 +476,8 @@ public class OrdemServicoDAO {
 			os.setVeiculo(VeiculoBO.pesqCodigo(rs.getInt("cd_veiculo"), c));
 			os.setVlrPago(rs.getDouble("vl_pago"));
 		}
+		rs.close();
+		estrutura.close();
 		return os;
 	}
 

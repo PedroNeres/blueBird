@@ -31,12 +31,7 @@ public abstract class PessoaBO {
 	}
 	
 	public static void atualizar(Pessoa pes, Connection c)throws Exception{
-		if(pes.getNome().length() < 4){
-			throw new Exception("O nome deve ter no mínimo 4 letras");
-		}
-		if(pes.getNome().length() > 60){
-			throw new Exception("O nome deve ter no máximo 60 letras");
-		}
+		
 		new PessoaDAO().atualizar(pes, c);
 	}
 	

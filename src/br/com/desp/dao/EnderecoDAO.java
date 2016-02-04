@@ -50,8 +50,9 @@ public class EnderecoDAO {
 		if(resultado.next()){
 			codigo = resultado.getInt("CD_CIDADE");
 		}
-		estrutura.close();
 		resultado.close();
+		estrutura.close();
+	
 		return codigo;
 	}
 	
@@ -65,8 +66,8 @@ public class EnderecoDAO {
 		if(resultado.next()){
 			indice = resultado.getInt("CD_ESTADO");
 		}
-		estrutura.close();
 		resultado.close();
+		estrutura.close();
 		return indice;
 	}
 	
@@ -81,8 +82,9 @@ public int verificarBairro(String bairro, Connection conexao) throws Exception{
 		if(resultado.next()){
 			codigo = resultado.getInt("CD_BAIRRO");
 		}
-		estrutura.close();
 		resultado.close();
+		estrutura.close();
+		
 		return codigo;
 	}
 
@@ -96,8 +98,9 @@ public int verificarBairro(String bairro, Connection conexao) throws Exception{
 		if(resultado.next()){
 			indice ++;
 		}
-		estrutura.close();
 		resultado.close();
+		estrutura.close();
+		
 		return indice;
 		
 	}
@@ -119,8 +122,9 @@ public int verificarBairro(String bairro, Connection conexao) throws Exception{
 		rs.next();
 		
 		int indice = Integer.parseInt(rs.getString(1));
-		estrutura.close();
 		rs.close();
+		estrutura.close();
+		
 		return indice;
 	}
 	
@@ -141,8 +145,9 @@ public int verificarBairro(String bairro, Connection conexao) throws Exception{
 		rs.next();
 		
 		int indice = Integer.parseInt(rs.getString(1));
-		estrutura.close();
 		rs.close();
+		estrutura.close();
+		
 		return indice;
 	}
 	
@@ -163,8 +168,9 @@ public int verificarBairro(String bairro, Connection conexao) throws Exception{
 		rs.next();
 		
 		int indice = Integer.parseInt(rs.getString(1));
-		estrutura.close();
 		rs.close();
+		estrutura.close();
+		
 		return indice;
 	}
 	
@@ -175,7 +181,6 @@ public int verificarBairro(String bairro, Connection conexao) throws Exception{
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		
 		estrutura.setInt(1, e.getCep());
-		System.out.println(e.getCep());
 		estrutura.setInt(2, cdBairro);
 		estrutura.setString(3, e.getLogradouro().toUpperCase());
 		estrutura.execute();
@@ -203,6 +208,7 @@ public int verificarBairro(String bairro, Connection conexao) throws Exception{
 "WHERE  PEND.CD_PESSOA = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		estrutura.setInt(1, codigo);
+		estrutura.execute();
 		ResultSet rs = estrutura.executeQuery();
 		if(rs.next()){
 			end.setCep(rs.getInt("CEP"));
@@ -213,8 +219,7 @@ public int verificarBairro(String bairro, Connection conexao) throws Exception{
 			end.setCidade(rs.getString("CIDADE"));
 			end.setUf(rs.getString("ESTADO"));
 		}
-		rs.close();
-		estrutura.close();
+		
 		return end;
 	}
 }

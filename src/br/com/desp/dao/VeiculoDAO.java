@@ -75,6 +75,8 @@ public class VeiculoDAO {
 			veic.setTipo(TipoVeiculoBO.pesqCodigo(rs.getInt("cd_tipo_veiculo"), c));
 			veiculos.add(veic);
 		}
+		rs.close();
+		estrutura.close();
 		return veiculos;
 	}
 	
@@ -91,6 +93,8 @@ public class VeiculoDAO {
 			veic.setModelo(rs.getString("ds_modelo"));
 			veic.setTipo(TipoVeiculoBO.pesqCodigo(rs.getInt("cd_tipo_veiculo"), c));
 		}
+		rs.close();
+		estrutura.close();
 		return veic;
 	}
 	
@@ -107,6 +111,8 @@ public class VeiculoDAO {
 			veic.setModelo(rs.getString("ds_modelo"));
 			veic.setTipo(TipoVeiculoBO.pesqCodigo(rs.getInt("cd_tipo_veiculo"), c));
 		}
+		rs.close();
+		estrutura.close();
 		return veic;
 	}
 	
@@ -123,6 +129,8 @@ public class VeiculoDAO {
 			veic.setModelo(rs.getString("ds_modelo"));
 			veic.setTipo(TipoVeiculoBO.pesqCodigo(rs.getInt("cd_tipo_veiculo"), c));
 		}
+		rs.close();
+		estrutura.close();
 		return veic;
 	}
 

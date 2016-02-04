@@ -24,7 +24,6 @@ public class FuncionarioDAO {
 		pes.setNome(fun.getNome());
 		pes.setTelefone(fun.getTelefone());
 		pes.setUsuario(fun.getUsuario());
-		System.out.println(fun.getNome());
 		fun.setCodigo(PessoaBO.cadastrar(pes, c));
 		
 		String sql = "INSERT INTO T_DESP_FUNCIONARIO (cd_funcionario, cd_filial, nr_cpf, cd_cargo, vl_salario, "

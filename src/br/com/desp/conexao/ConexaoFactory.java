@@ -8,6 +8,7 @@ public class ConexaoFactory {
 	
 	private static ConexaoFactory conexao = null;
 	
+	
 	public static ConexaoFactory controlarInstancia(){
 		if (conexao == null){
 			conexao = new ConexaoFactory();
