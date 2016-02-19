@@ -13,12 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import br.com.desp.beans.Cheque;
 import br.com.desp.beans.Funcionario;
 import br.com.desp.beans.Pagamento;
 import br.com.desp.beans.Pessoa;
 import br.com.desp.beans.TipoOrdemServico;
 import br.com.desp.beans.TipoVeiculo;
 import br.com.desp.beans.Usuario;
+import br.com.desp.bo.ChequeBO;
 import br.com.desp.bo.FuncionarioBO;
 import br.com.desp.bo.PagamentoBO;
 import br.com.desp.bo.PessoaBO;
@@ -26,6 +28,7 @@ import br.com.desp.bo.TipoOrdemBO;
 import br.com.desp.bo.TipoVeiculoBO;
 import br.com.desp.bo.UsuarioBO;
 import br.com.desp.conexao.ConexaoFactory;
+import br.com.desp.util.DataUtil;
 import br.com.desp.util.EmailUtil;
 
 
@@ -69,14 +72,29 @@ public class UsuarioServlet extends HttpServlet {
 			List<Pagamento> pags = new ArrayList<Pagamento>();
 			List<TipoOrdemServico> tiposOrdem = new ArrayList<TipoOrdemServico>();
 			List<TipoVeiculo> tiposVeiculos = new ArrayList<TipoVeiculo>();
+			List<Cheque> cheques = new ArrayList<Cheque>();
 			
 			pags = PagamentoBO.listarPagAberto(c);
 			tiposOrdem = TipoOrdemBO.listar(c);
 			tiposVeiculos = TipoVeiculoBO.listar(c);
+			cheques = ChequeBO.listarPendentes(c);
+			
+			int qtnCheques = 0;
+			
+			for(Cheque che: cheques){
+				
+					
+				if(DataUtil.CalendarString(che.getDtDeposito()).equals(DataUtil.CalendarString(Calendar.getInstance()))){
+					qtnCheques ++;
+				}
+						
+					
+			}
 			
 			req.setAttribute("pagAberto", pags);
 			req.setAttribute("tpVeiculo", tiposVeiculos);
 			req.setAttribute("tpOrdem", tiposOrdem);
+			req.setAttribute("qtnCheques", qtnCheques);
 			
 		}catch(Exception e){
 			e.printStackTrace();

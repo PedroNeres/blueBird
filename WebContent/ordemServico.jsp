@@ -72,7 +72,7 @@
                 <div class="row">
                 
           			<div class="col-md-5"></div>
-          			<a href="" class="col-md-2 btn btn-primary">Imprimir</a>
+          			<a href="ordemServico?acao=imprimir&numero=${os.numero }" class="col-md-2 btn btn-primary">Imprimir</a>
                 </div>
                 <br>
                 
@@ -264,6 +264,12 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
+    
+    <script type="text/javascript">
+    	$("#print").click(function(){
+    		window.print()
+    	});
+    </script>
     
 </body>
 

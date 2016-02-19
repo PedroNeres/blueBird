@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import br.com.desp.beans.Cheque;
 import br.com.desp.beans.Cliente;
 import br.com.desp.beans.FormaPagamento;
 import br.com.desp.beans.Funcionario;
@@ -23,6 +24,7 @@ import br.com.desp.beans.OrdemServico;
 import br.com.desp.beans.Pagamento;
 import br.com.desp.beans.StatusOs;
 import br.com.desp.beans.Veiculo;
+import br.com.desp.bo.ChequeBO;
 import br.com.desp.bo.ClienteBO;
 import br.com.desp.bo.FormaPagamentoBO;
 import br.com.desp.bo.FuncionarioBO;
@@ -75,11 +77,44 @@ public class OrdemServicoServlet extends HttpServlet {
 			carregarAltOs(req);
 			retorno = "alterarStatus.jsp";
 			break;
+		case "imprimir":
+			imprimir(req);
+			retorno = "imprimir.jsp";
+			break;
 		default:
 			retorno = "home.jsp";
 			break;
 		}
 		req.getRequestDispatcher(retorno).forward(req, resp);
+	}
+
+	private void imprimir(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			
+			int nrOs = Integer.parseInt(req.getParameter("numero"));
+			
+			OrdemServico os = OrdemServicoBO.pesqNumeroOs(nrOs, c);
+			
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy");
+			String dataString = s.format(cal.getTime());
+			dataString = DataUtil.DataExtenso(dataString);
+		
+			String valorStr = NumeroUtil.strExtenso(os.getTotal());
+			req.setAttribute("valorStr", valorStr);
+			req.setAttribute("strDtHoje", dataString);
+			
+			req.setAttribute("os", os);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void removeOs(HttpServletRequest req) {
@@ -171,15 +206,12 @@ public class OrdemServicoServlet extends HttpServlet {
 			placa = req.getParameter("placa");
 			cpf = req.getParameter("cpf");
 			
-			System.out.println(placa);
-			System.out.println(numOs);
-			System.out.println(cpf);
+		
 			
 			String data1 = req.getParameter("data1");
 			String data2 = req.getParameter("data2");
 			
-			System.out.println(data1);
-			
+	
 			List<OrdemServico> listaOs = new ArrayList<OrdemServico>();
 			
 			if(!numOs.equals("")){
@@ -346,8 +378,6 @@ public class OrdemServicoServlet extends HttpServlet {
 			os.setNumero(OrdemServicoBO.cadastrar(os, c));
 			for(Pagamento pags : listaPagtos){
 				os.setVlrPago(os.getVlrPago() + pags.getVlPagao());
-				System.out.println("valorPago " + os.getVlrPago());
-				System.out.println("vlrPagto " + pags.getVlPagao());
 			}
 			Calendar cal = Calendar.getInstance();
 			SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy");
@@ -380,6 +410,37 @@ public class OrdemServicoServlet extends HttpServlet {
 		}
 		
 	}
+	
+	private void cadastrarCheque(HttpServletRequest req) {
+		Connection c = null;
+		
+		try {
+			
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			
+			Cheque cheque = new Cheque();
+			cheque.setDtRecebimento(Calendar.getInstance());
+			cheque.setDtDeposito(DataUtil.converter(req.getParameter("dtDeposito")));
+			if(DataUtil.validarData(cheque.getDtDeposito()) == -1){
+				cheque.setStatus(1);
+			}else{
+				cheque.setStatus(0);
+			}
+			cheque.setValor(Double.parseDouble(req.getParameter("vlrPag").replace(",", ".")));
+			OrdemServico os = new OrdemServico();
+			HttpSession sessao = req.getSession();
+			os = (OrdemServico) sessao.getAttribute("os");
+			cheque.setEmitente(os.getCliente().getNome());
+			cheque.setNumero(Integer.parseInt(req.getParameter("codPag")));
+			
+			ChequeBO.cadastrar(cheque, c);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			req.setAttribute("erro", e.getMessage());
+			e.printStackTrace();
+		}
+	}
 
 	public static List<Pagamento> listaPagtos = new ArrayList<Pagamento>();
 	private void addPagamento(HttpServletRequest req) {
@@ -394,6 +455,9 @@ public class OrdemServicoServlet extends HttpServlet {
 			os = (OrdemServico) sessao.getAttribute("os");
 			Pagamento pag = new Pagamento();
 			pag.setForPagamento(FormaPagamentoBO.pesqCodigo(Integer.parseInt(req.getParameter("forPagamento")), c));
+			
+			
+			
 			pag.setNumero(req.getParameter("codPag"));
 			pag.setObservacoes(req.getParameter("desPag"));
 			pag.setVlPagao(Double.parseDouble(req.getParameter("vlrPag").replace(",", ".")));
@@ -405,8 +469,6 @@ public class OrdemServicoServlet extends HttpServlet {
 			os.setVlrPago(0);
 			for(Pagamento pags : listaPagtos){
 				os.setVlrPago(os.getVlrPago() + pags.getVlPagao());
-				System.out.println("valorPago " + os.getVlrPago());
-				System.out.println("vlrPagto " + pags.getVlPagao());
 			}
 			Calendar cal = Calendar.getInstance();
 			SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy");
@@ -419,6 +481,9 @@ public class OrdemServicoServlet extends HttpServlet {
 			req.setAttribute("restante", restante);
 			sessao.setAttribute("os", os);
 			req.setAttribute("msg", "Pagamento adicionado com sucesso");
+			if(pag.getForPagamento().getDescricao().equals("CHEQUE")){
+				cadastrarCheque(req);
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			req.setAttribute("erro", e.getMessage());

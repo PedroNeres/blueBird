@@ -296,7 +296,7 @@ public class FuncionarioServlet extends HttpServlet{
 			Funcionario fun = new Funcionario();
 			
 			String nome = req.getParameter("nome").toUpperCase();
-			System.out.println("Antes de passar pra class " + nome);
+			
 			req.setAttribute("nome", nome);
 			long cpf = Long.parseLong(req.getParameter("cpf"));
 			req.setAttribute("cpf", cpf);
@@ -304,9 +304,9 @@ public class FuncionarioServlet extends HttpServlet{
 			
 			Calendar dtAdmissao = DataUtil.converter(strData);
 			req.setAttribute("dtAdmissao", dtAdmissao);
-			System.out.println("Antes de passar pra class " + nome);
+			
 			fun.setNome(nome);
-			System.out.println("servlet " + fun.getNome());
+			
 			fun.setCpf(cpf);
 			fun.setDtAdmissao(dtAdmissao);
 	
@@ -327,7 +327,7 @@ public class FuncionarioServlet extends HttpServlet{
 			String bairro = req.getParameter("bairro").toUpperCase();
 			req.setAttribute("bairro", bairro);
 			String cidade = req.getParameter("cidade").toUpperCase();
-			System.out.println(cidade);
+			
 			req.setAttribute("cidade", cidade);
 			String uf = req.getParameter("uf").toUpperCase();
 			req.setAttribute("uf", uf);

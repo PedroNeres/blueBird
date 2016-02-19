@@ -17,12 +17,12 @@ public class TesteEnviarEmail {
 		
 				HtmlEmail email = new HtmlEmail();
 				email.setHostName("smtp.gmail.com");
-				email.addTo("carvalho.pedro.n@gmail.com", "Pedro Neres");//destinatário
-				email.setFrom("pedroneres@univipsp.com.br", "Pedro Univip");//remetente
-				email.setSubject("Testando e-mail html"); //titulo
+				email.addTo("macmatriz@hotmail.com", "Mac Matriz");//destinatário
+				email.setFrom("carvalho.pedro.n@gmail.com", "Pedro Neres");//remetente
+				email.setSubject("Sistema de Gerenciamento para Despachante"); //titulo
 				email.setSmtpPort(465);
 				
-				BufferedReader br = new BufferedReader(new FileReader("C:/index.jsp"));
+				BufferedReader br = new BufferedReader(new FileReader("C:/sgDespachante.html"));
 				String html = "";
 				while(br.ready()){
 				   String linha = br.readLine();
@@ -30,14 +30,14 @@ public class TesteEnviarEmail {
 				   html = html+linha;
 				}
 				
-				System.out.println(html);
+				
 				
 				
 				email.setHtmlMsg(html);
 				br.close();
 				email.setSSL(true);
 				System.out.println("set ssl");
-				email.setAuthentication("pedroneres@univipsp.com.br", "Helena135086");
+				email.setAuthentication("carvalho.pedro.n@gmail.com", "helena135086");
 				email.setTextMsg("Seu servidor de e-mail não suporta mensagem HTML");
 				
 				email.send();

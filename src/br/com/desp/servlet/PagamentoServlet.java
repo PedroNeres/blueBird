@@ -3,6 +3,7 @@ package br.com.desp.servlet;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,13 +12,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import br.com.desp.beans.Cheque;
 import br.com.desp.beans.Pagamento;
 import br.com.desp.beans.TipoOrdemServico;
 import br.com.desp.beans.TipoVeiculo;
+import br.com.desp.bo.ChequeBO;
 import br.com.desp.bo.PagamentoBO;
 import br.com.desp.bo.TipoOrdemBO;
 import br.com.desp.bo.TipoVeiculoBO;
 import br.com.desp.conexao.ConexaoFactory;
+import br.com.desp.util.DataUtil;
 
 @WebServlet ("/pagamento")
 public class PagamentoServlet extends HttpServlet {
@@ -64,23 +68,37 @@ public class PagamentoServlet extends HttpServlet {
 			List<Pagamento> pags = new ArrayList<Pagamento>();
 			List<TipoOrdemServico> tiposOrdem = new ArrayList<TipoOrdemServico>();
 			List<TipoVeiculo> tiposVeiculos = new ArrayList<TipoVeiculo>();
+			List<Cheque> cheques = new ArrayList<Cheque>();
 			
 			pags = PagamentoBO.listarPagAberto(c);
-			for(Pagamento pag: pags){
-				System.out.println(pag.getVlPagao());
-			}
 			tiposOrdem = TipoOrdemBO.listar(c);
 			tiposVeiculos = TipoVeiculoBO.listar(c);
+			cheques = ChequeBO.listarPendentes(c);
+			
+			int qtnCheques = 0;
+			
+			for(Cheque che: cheques){
+				
+					
+				if(DataUtil.CalendarString(che.getDtDeposito()).equals(DataUtil.CalendarString(Calendar.getInstance()))){
+					qtnCheques ++;
+				}
+						
+					
+			}
 			
 			req.setAttribute("pagAberto", pags);
 			req.setAttribute("tpVeiculo", tiposVeiculos);
 			req.setAttribute("tpOrdem", tiposOrdem);
+			req.setAttribute("qtnCheques", qtnCheques);
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
 	}
+		
+	
 
 	private void aprovarTodos(HttpServletRequest req) {
 		// TODO Auto-generated method stub

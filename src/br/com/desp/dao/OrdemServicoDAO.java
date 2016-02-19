@@ -85,7 +85,7 @@ public class OrdemServicoDAO {
 	public List<OrdemServico> listar(Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO ORDER BY nr_ordem DESC";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){

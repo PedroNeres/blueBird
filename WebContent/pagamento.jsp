@@ -103,6 +103,16 @@
         						placeholder="Número">
         					</div>
         					</div>
+        					<div class="row ">
+        						<div class="form-group col-md-12">
+        							<input type="checkbox" name="pDatado" id="pDatado">
+        							<label for="pDatado">Cheque pré datado</label>
+        						</div>
+        						<div class="form-group col-md-5 dtCheque">
+        							<label for="dtDeposito">Data pra depósto</label>
+        							<input type="text" name="dtDeposito" id="dtDeposito" class="form-control" value="<fmt:formatDate value='${dtHoje.time }'/>">
+        						</div>
+        					</div>
         					<div class="row">
         						<div class="form-group col-md-4">
         							<input type="submit" value="Adicionar" class="btn btn-primary">
@@ -237,7 +247,19 @@
     
     <script type="text/javascript">
 	
-	
+    $(".dtCheque").hide();
+    
+    
+    
+    $("#pDatado").click(function(){
+    	if($("#pDatado").is(":checked") == true){
+        	$(".dtCheque").fadeIn(1000);
+        }else{
+        	$(".dtCheque").fadeOut(1000);
+        }
+    });
+    
+    
 
 	</script>
 
