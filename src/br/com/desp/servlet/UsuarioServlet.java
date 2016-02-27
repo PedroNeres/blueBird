@@ -14,14 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import br.com.desp.beans.Cheque;
+import br.com.desp.beans.Contas;
 import br.com.desp.beans.Funcionario;
+import br.com.desp.beans.Mensagem;
 import br.com.desp.beans.Pagamento;
 import br.com.desp.beans.Pessoa;
 import br.com.desp.beans.TipoOrdemServico;
 import br.com.desp.beans.TipoVeiculo;
 import br.com.desp.beans.Usuario;
 import br.com.desp.bo.ChequeBO;
+import br.com.desp.bo.ContasBO;
 import br.com.desp.bo.FuncionarioBO;
+import br.com.desp.bo.MensagemBO;
 import br.com.desp.bo.PagamentoBO;
 import br.com.desp.bo.PessoaBO;
 import br.com.desp.bo.TipoOrdemBO;
@@ -73,28 +77,52 @@ public class UsuarioServlet extends HttpServlet {
 			List<TipoOrdemServico> tiposOrdem = new ArrayList<TipoOrdemServico>();
 			List<TipoVeiculo> tiposVeiculos = new ArrayList<TipoVeiculo>();
 			List<Cheque> cheques = new ArrayList<Cheque>();
+			List<Contas> contas = new ArrayList<Contas>();
+			List<Mensagem> mensagens = new ArrayList<Mensagem>();
+			
+			HttpSession sessao = req.getSession();
+			
+			String email = req.getParameter("email");
+			
+		
 			
 			pags = PagamentoBO.listarPagAberto(c);
 			tiposOrdem = TipoOrdemBO.listar(c);
 			tiposVeiculos = TipoVeiculoBO.listar(c);
 			cheques = ChequeBO.listarPendentes(c);
+			contas = ContasBO.pesqStatus(1, c);
+			mensagens = MensagemBO.naoLidos(email, c);
 			
 			int qtnCheques = 0;
 			
-			for(Cheque che: cheques){
-				
-					
+			for(Cheque che: cheques){	
 				if(DataUtil.CalendarString(che.getDtDeposito()).equals(DataUtil.CalendarString(Calendar.getInstance()))){
 					qtnCheques ++;
 				}
-						
-					
 			}
 			
-			req.setAttribute("pagAberto", pags);
-			req.setAttribute("tpVeiculo", tiposVeiculos);
-			req.setAttribute("tpOrdem", tiposOrdem);
-			req.setAttribute("qtnCheques", qtnCheques);
+			int qtnMensagens = 0;
+			
+			for(Mensagem men: mensagens){
+				qtnMensagens ++;
+			}
+			
+			int qtnContas = 0;
+			
+			for(Contas cont: contas){
+				qtnContas ++;
+			}
+			
+			
+			sessao.setAttribute("pagAberto", pags);
+			sessao.setAttribute("tpVeiculo", tiposVeiculos);
+			sessao.setAttribute("tpOrdem", tiposOrdem);
+			sessao.setAttribute("qtnCheques", qtnCheques);
+			sessao.setAttribute("qtnContas", qtnContas);
+			sessao.setAttribute("qtnMensagens", qtnMensagens);
+			sessao.setAttribute("mensagens", mensagens);
+			
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -145,9 +173,6 @@ public class UsuarioServlet extends HttpServlet {
 			usu.setPassword(req.getParameter("senha"));
 			String confSenha = req.getParameter("confSenha");
 			
-			System.out.println(usu.getPassword());
-			System.out.println(confSenha);
-			
 			Pessoa pes = PessoaBO.pesqEmail(usu.getEmail(), c);
 			if(!pes.getUsuario().getPassword().equals(req.getParameter("antigaSenha"))){
 				req.setAttribute("erro", "A senha antiga esta incorreta, você precisa saber a senha"
@@ -194,11 +219,30 @@ public class UsuarioServlet extends HttpServlet {
 			usu.setPassword(senha);
 			Funcionario fun = FuncionarioBO.pesqEmail(usu, c);
 			Calendar dtHoje = Calendar.getInstance();
+			String strDtHoje = DataUtil.CalendarString(dtHoje);
+			
+			List<Contas> contas = ContasBO.listar(c);
+			for(Contas cont: contas){
+				String dt = DataUtil.CalendarString(cont.getProxVenc());
+				int dia = Integer.parseInt(dt.substring(0,2));
+				int mes = Integer.parseInt(dt.substring(3,5));
+				int ano = Integer.parseInt(dt.substring(6,10));
+				
+				int diaHoje = Integer.parseInt(strDtHoje.substring(0,2));
+				int mesHoje = Integer.parseInt(strDtHoje.substring(3,5));
+				int anoHoje = Integer.parseInt(strDtHoje.substring(6,10));
+				
+				if(dia - 1 >= diaHoje && mes == mesHoje && ano == anoHoje){
+					if(cont.getStatus() != 2){	
+						cont.setStatus(1);
+						ContasBO.vencendo(cont, c);
+					}
+				}
+			}
 			
 			int ver = PessoaBO.verEmail(email, c);
 			HttpSession sessao = req.getSession();
 			sessao.setAttribute("dtHoje", dtHoje);
-			sessao.setMaxInactiveInterval(60);
 			if(ver == 0){
 				req.setAttribute("erro", "Este usuário não existe!");
 				retorno = "index.jsp";

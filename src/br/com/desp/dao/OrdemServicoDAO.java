@@ -58,8 +58,8 @@ public class OrdemServicoDAO {
 	}
 	
 	public void editar(OrdemServico os, Connection c)throws Exception{
-		String sql = "UPDATE T_DESP_ORDEM_SERVICO SET(cd_cliente =? , cd_funcionario = ?, dt_entrada = ?, vl_total = ?, "
-				+ "vl_desconto = ?, vl_pago = ?, cd_mudar_status = ?, cd_tipo_ordem = ?)";
+		String sql = "UPDATE T_DESP_ORDEM_SERVICO SET cd_cliente =? , cd_funcionario = ?, dt_entrada = ?, vl_total = ?, "
+				+ "vl_desconto = ?, vl_pago = ?, cd_mudar_status = ?, cd_tipo_ordem = ? WHERE nr_ordem = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		estrutura.setInt(1, os.getCliente().getCodigo());
 		estrutura.setInt(2, os.getAtendente().getCodigo());
@@ -69,6 +69,7 @@ public class OrdemServicoDAO {
 		estrutura.setDouble(6, os.getVlrPago());
 		estrutura.setInt(7, os.getStatus().getCodigo());
 		estrutura.setInt(8, os.getTipo().getCodigo());
+		estrutura.setInt(9, os.getNumero());
 		estrutura.execute();
 		estrutura.close();
 	}

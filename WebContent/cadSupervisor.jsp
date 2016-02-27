@@ -288,7 +288,7 @@
                 	
                 	
                 	
-                	<%@include file="chat.jsp" %>
+                	
                 	
                 </div>
                 <!-- /.col-lg-5 -->

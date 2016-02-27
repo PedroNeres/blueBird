@@ -152,10 +152,11 @@
           			 							<td><fmt:formatDate value="${os.dtEntrada.time }"/></td>
           			 							<td>${os.status.status.descricao }</td>
           			 							<td>
-          			 								<a href="">Abrir</a> / <a href="">Add Pag</a>
+          			 								<a href="ordemServico?acao=abrir&codigo=${os.numero}">Abrir</a> / <c:if test="${os.total - os.vlrPago > 0 }"><a href="#" data-toggle="modal" data-target="#ModalAddPagamento${os.numero }">Add Pag</a></c:if>
           			 							</td>
           			 							
           			 						</tr>
+          			 						<%@include file="addPagamento.jsp" %>
           			 					</c:forEach>
           			 				</tbody>
           			 			</table>
@@ -190,6 +191,24 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
+    
+    <script type="text/javascript">
+	
+    $(".dtCheque").hide();
+    
+    
+    
+    $("#pDatado").click(function(){
+    	if($("#pDatado").is(":checked") == true){
+        	$(".dtCheque").fadeIn(1000);
+        }else{
+        	$(".dtCheque").fadeOut(1000);
+        }
+    });
+    
+    
+
+	</script>
     
 </body>
 

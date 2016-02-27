@@ -1,6 +1,7 @@
 package br.com.desp.bo;
 
 import java.sql.Connection;
+import java.util.List;
 
 import br.com.desp.beans.Filial;
 import br.com.desp.beans.Funcionario;
@@ -18,6 +19,10 @@ public abstract class UsuarioBO {
 			throw new Exception("Senha inválida");
 		}
 		return fun;
+	}
+	
+	public static List<Usuario> listar(Connection c)throws Exception{
+		return new UsuarioDAO().listarUsuarios(c);
 	}
 	
 	public static Filial logarFilial(Usuario usu, Connection c)throws Exception{

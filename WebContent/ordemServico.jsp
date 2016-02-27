@@ -67,12 +67,12 @@
           	
             <div class="row">
             
-                <div class="col-lg-8">
+                <div class="col-lg-10">
                 
                 <div class="row">
                 
           			<div class="col-md-5"></div>
-          			<a href="ordemServico?acao=imprimir&numero=${os.numero }" class="col-md-2 btn btn-primary">Imprimir</a>
+          			<a href="ordemServico?acao=imprimir&numero=${os.numero }" target="_blank" class="col-md-2 btn btn-primary">Imprimir</a>
                 </div>
                 <br>
                 
@@ -234,12 +234,7 @@
                 <!-- /.col-lg-8 -->
                 
                 
-                <div class="col-lg-4">
-                
-                	<%@include file="chat.jsp" %>
-                	
-                </div>
-                <!-- /.col-lg-4 -->
+             
             </div>
             <!-- /.row -->
             </div>

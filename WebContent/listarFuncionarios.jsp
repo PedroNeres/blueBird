@@ -65,7 +65,7 @@
           	</div>    
             <div class="row">
             
-                <div class="col-lg-8">
+                <div class="col-lg-10">
                 
                 <table class="table">
                 	<tr>
@@ -115,13 +115,7 @@
                 <!-- /.col-lg-7 -->
                 
                 
-                <div class="col-lg-4">
-                
-                
-                	<%@include file="chat.jsp" %>
-                	
-                </div>
-                <!-- /.col-lg-4 -->
+              
             </div>
             <!-- /.row -->
             </div>

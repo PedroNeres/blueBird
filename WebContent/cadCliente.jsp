@@ -65,7 +65,7 @@
           	</div>    
             <div class="row">
             
-                <div class="col-lg-7">
+                <div class="col-lg-10">
         
         			<div class="panel panel-default">
         				<div class="panel-heading">
@@ -169,12 +169,7 @@
            		</div>
                 <!-- /.col-lg-7 -->
                 
-                
-                <div class="col-lg-5"> 	
-                	<%@include file="chat.jsp" %>
-                	
-                </div>
-                <!-- /.col-lg-5 -->
+             
             </div>
             <!-- /.row -->
             </div>

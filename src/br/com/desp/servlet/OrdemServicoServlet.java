@@ -2,6 +2,7 @@ package br.com.desp.servlet;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +30,7 @@ import br.com.desp.bo.ClienteBO;
 import br.com.desp.bo.FormaPagamentoBO;
 import br.com.desp.bo.FuncionarioBO;
 import br.com.desp.bo.OrdemServicoBO;
+import br.com.desp.bo.PagamentoBO;
 import br.com.desp.bo.ServicoBO;
 import br.com.desp.bo.StatusOsBO;
 import br.com.desp.bo.TipoOrdemBO;
@@ -46,7 +48,7 @@ public class OrdemServicoServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+		
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -81,11 +83,100 @@ public class OrdemServicoServlet extends HttpServlet {
 			imprimir(req);
 			retorno = "imprimir.jsp";
 			break;
+		case "abrir":
+			abrir(req);
+			retorno = "ordemServico.jsp";
+			break;
+		case "addPagOs":
+			addPagOs(req);
+			retorno = "listaOs.jsp";
+			break;
 		default:
 			retorno = "home.jsp";
 			break;
 		}
 		req.getRequestDispatcher(retorno).forward(req, resp);
+	}
+
+	private void addPagOs(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			c.setAutoCommit(false);
+			
+			FormaPagamento forPagamento = FormaPagamentoBO.pesqCodigo
+					(Integer.parseInt(req.getParameter("forPagamento")), c);
+			String numero = req.getParameter("codPag");
+			String observacoes = req.getParameter("desPag");
+			OrdemServico ordemServico = OrdemServicoBO.pesqNumeroOs
+					(Integer.parseInt(req.getParameter("numOs")), c);
+			double vlPagao = NumeroUtil.strDouble(req.getParameter("vlrPag"));
+			
+			Pagamento pag = new Pagamento();
+			pag.setForPagamento(forPagamento);
+			pag.setNumero(numero);
+			pag.setObservacoes(observacoes);
+			pag.setOrdemServico(ordemServico);
+			pag.setVlPagao(vlPagao);
+			
+			if(pag.getVlPagao() > (ordemServico.getTotal() - ordemServico.getVlrPago() + 1)){
+				req.setAttribute("erro", "O valor pago não pode ser maior que o valor que falta");
+			}else{
+			
+			PagamentoBO.cadastrar(pag, c);
+			
+			ordemServico.getPagamento().add(pag);
+			ordemServico.setVlrPago(ordemServico.getVlrPago() + vlPagao);
+			OrdemServicoBO.editar(ordemServico, c);
+			req.setAttribute("msg", "O pagamento foi adicionado com sucesso");
+			}
+			c.commit();
+			c.setAutoCommit(true);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			try {
+				c.rollback();
+				req.setAttribute("erro", e.getMessage());
+				e.printStackTrace();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+
+	private void abrir(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			
+			int codigo = Integer.parseInt(req.getParameter("codigo"));
+			
+			OrdemServico os = OrdemServicoBO.pesqNumeroOs(codigo, c);
+			
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy");
+			String dataString = s.format(cal.getTime());
+			dataString = DataUtil.DataExtenso(dataString);
+			String valorStr = NumeroUtil.strExtenso(os.getTotal());
+			req.setAttribute("valorStr", valorStr);
+			req.setAttribute("strDtHoje", dataString);
+			
+			req.setAttribute("os", os);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void imprimir(HttpServletRequest req) {
@@ -277,7 +368,8 @@ public class OrdemServicoServlet extends HttpServlet {
 				cli.setNome(StringUtil.primeiraPalavra(os.getCliente().getNome()));
 				os.setCliente(cli);
 			}
-			
+			List<FormaPagamento> fo = FormaPagamentoBO.listar(c);
+			req.setAttribute("formasPag", fo);
 			req.setAttribute("listaOs", listaOs);
 			
 			
@@ -316,6 +408,11 @@ public class OrdemServicoServlet extends HttpServlet {
 			alterarStatus(req);
 			carregarAltOs(req);;
 			retorno = "alterarStatus.jsp";
+			break;
+		case "addPagOs":
+			addPagOs(req);
+			listar(req);
+			retorno = "listaOs.jsp";
 			break;
 		}
 		req.getRequestDispatcher(retorno).forward(req, resp);

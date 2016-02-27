@@ -1,5 +1,6 @@
 
  <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+ <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
  
  		<%if (session.getAttribute("user") == null){%>
       		<% response.sendRedirect("usuario?acao=erro");%>
@@ -14,7 +15,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="usuario?acao=carregarHome">SG Despachante</a>
+                <a class="navbar-brand" href="home.jsp">SG Despachante</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -24,35 +25,35 @@
                         <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-messages">
+                    <c:if test="${mensagens == null }">
+                    	<li>Nenhuma nova mensagem...</li>
+                    </c:if>
+                    <c:forEach end="2" var="mens" items="${mensagens }">
                         <li>
-                            <a href="#">
+                            <a href="mensagem?acao=abrir&codigo=${mens.codigo }">
                                 <div>
-                                    <strong>NOME DO USUÁRIO</strong>
+                                    <strong>${mens.nomeRemetente }</strong>
                                     <span class="pull-right text-muted">
-                                        <em>DATA E HORA</em>
+                                        <em><fmt:formatDate value="${mens.dtEnvio.time }"/></em>
                                     </span>
                                 </div>
-                                <div>MENSAGEM</div>
+                                <div>${mens.assunto }...</div>
                             </a>
                         </li>
                         <li class="divider"></li>
+                     </c:forEach>
+                      
                         <li>
-                            <a href="#">
-                                <div>
-                                    <strong>NOME DO USUÁRIO</strong>
-                                    <span class="pull-right text-muted">
-                                        <em>DATA E HORA</em>
-                                    </span>
-                                </div>
-                                <div>MENSAGEM</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
+                            <a class="text-center" href="mensagem?acao=listarTodos&email=${user.usuario.email }">
                                 <strong>Todas Mensagens</strong>
                                 <i class="fa fa-angle-right"></i>
                             </a>
+                        </li>
+                        <li>
+                        	<a class="text-center" href="mensagem?acao=novaMensagem">
+                        		<strong>Nova Mensagem</strong>
+                        		<i class="fa fa-angle-right"></i>
+                        	</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-messages -->
@@ -66,9 +67,9 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                    	<li><a href="#"><i class="fa fa-user fa-fw"></i>${user.nome } - ${user.cargo.codigo }</a></li>
+                    	<li><a href="funcionario?acao=carregarFun&cdFun=${user.codigo }"><i class="fa fa-user fa-fw"></i>${user.nome } - ${user.cargo.codigo }</a></li>
                     	<li class="divider"></li>
-                        <li><a href="#"><i class="fa fa-pencil fa-fw"></i> Editar Perfil</a>
+                        <li><a href="funcionario?acao=carregarFun&cdFun=${user.codigo }"><i class="fa fa-pencil fa-fw"></i> Editar Perfil</a>
                         </li>
                         <li><a href="" data-toggle="modal" data-target="#ModalAlterarSenha"><i class="fa fa-gear fa-fw"></i> Alterar Senha</a>
                         </li>
@@ -100,7 +101,7 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="usuario?acao=carregarHome"><i class="fa fa-dashboard fa-fw"></i> ${user.nome }</a>
+                            <a href="home.jsp"><i class="fa fa-dashboard fa-fw"></i> ${user.nome }</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-building-o fa-fw"></i> Ordem de Serviços<span class="fa arrow"></span></a>

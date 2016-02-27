@@ -2,12 +2,14 @@ package br.com.desp.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.desp.beans.Filial;
 import br.com.desp.beans.Funcionario;
 import br.com.desp.beans.Pessoa;
 import br.com.desp.beans.Usuario;
-import br.com.desp.bo.EnderecoBO;
 import br.com.desp.bo.FilialBO;
 import br.com.desp.bo.FuncionarioBO;
 import br.com.desp.bo.PessoaBO;
@@ -35,6 +37,25 @@ public class UsuarioDAO {
 		estrutura.setInt(2, pes.getCodigo());
 		estrutura.execute();
 		estrutura.close();
+	}
+	
+	public List<Usuario> listarUsuarios(Connection c)throws Exception{
+		List<Usuario> usuarios = new ArrayList<Usuario>();
+		Usuario user = null;
+		String sql = "SELECT * FROM T_DESP_PESSOA";
+		
+		PreparedStatement estrutura = c.prepareStatement(sql);
+		ResultSet rs = estrutura.executeQuery();
+		
+		while(rs.next()){
+			user = new Usuario();
+			user.setEmail(rs.getString("ds_email"));
+			user.setPassword(rs.getString("ds_senha"));
+			usuarios.add(user);
+		}
+		rs.close();
+		estrutura.close();
+		return usuarios;
 	}
 
 }

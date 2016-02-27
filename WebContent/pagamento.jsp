@@ -70,7 +70,7 @@
         			
         				<div class="panel panel-default">
         					<div class="panel-heading">
-        						<strong>Adicionar Serviço</strong>
+        						<strong>Adicionar Pagamento</strong>
         					</div>
         					<div class="panel-body">
         				<form action="ordemServico" method="post">

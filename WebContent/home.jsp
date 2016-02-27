@@ -78,7 +78,7 @@
                 
                 
             <div class="row">
-                <div class="col-lg-7">
+                <div class="col-lg-10">
         
                 <div class="row">
                 	<div class="col-lg-4 col-md-4">
@@ -111,12 +111,12 @@
                                     <i class="fa fa-comments fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">26</div>
+                                    <div class="huge">${qtnMensagens }</div>
                                     <div>Mensagens!</div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                        <a href="mensagem?acao=listarTodos&email=${user.usuario.email }">
                             <div class="panel-footer">
                                 <span class="pull-left">Mais detalhes</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -133,12 +133,12 @@
                                     <i class="fa fa-tasks fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">12</div>
+                                    <div class="huge">${qtnContas }</div>
                                     <div>Contas!</div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                        <a href="contas?acao=listarVencendo">
                             <div class="panel-footer">
                                 <span class="pull-left">Mais detalhes</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -220,12 +220,7 @@
                 <!-- /.col-lg-7 -->
                 
                 
-                <div class="col-lg-5">
-                	
-                    <%@include file="chat.jsp" %>
-                    
-                </div>
-                <!-- /.col-lg-5 -->
+               
             </div>
             <!-- /.row -->
             
