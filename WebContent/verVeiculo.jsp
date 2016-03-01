@@ -47,7 +47,7 @@
 			<div id="morris-bar-chart"></div>
 			<div id="morris-donut-chart"></div>
 		</div>
-       <%@include file="../topo.jsp" %>
+       <%@include file="topo.jsp" %>
 	
             
 

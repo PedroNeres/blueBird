@@ -272,8 +272,9 @@ public class OrdemServicoDAO {
 	public List<OrdemServico> pesqStatus(int cdStatus, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_MUDAR_STATUS_OS ST ON(OS.CD_MUDAR_STATUS = ST.CD_MUDAR_STATUS_OS) WHERE ST.cd_status_os = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
+		estrutura.setInt(1, cdStatus);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -286,7 +287,7 @@ public class OrdemServicoDAO {
 			os.setNumero(rs.getInt("nr_ordem"));
 			os.setPagamento(PagamentoBO.listarOrdem(os.getNumero(), c));
 			os.setServicos(ItemServicoBO.listarServOs(os.getNumero(), c));
-			os.setStatus(MudarStatusOsBO.pesqCodigo(rs.getInt("cd_status"), c));
+			os.setStatus(MudarStatusOsBO.pesqCodigo(rs.getInt("cd_mudar_status"), c));
 			os.setTipo(TipoOrdemBO.pesqCodigo(rs.getInt("cd_tipo_ordem"), c));
 			os.setTotal(rs.getDouble("vl_total"));
 			os.setVeiculo(VeiculoBO.pesqCodigo(rs.getInt("cd_veiculo"), c));
@@ -319,7 +320,7 @@ public class OrdemServicoDAO {
 			os.setNumero(rs.getInt("nr_ordem"));
 			os.setPagamento(PagamentoBO.listarOrdem(os.getNumero(), c));
 			os.setServicos(ItemServicoBO.listarServOs(os.getNumero(), c));
-			os.setStatus(MudarStatusOsBO.pesqCodigo(rs.getInt("cd_status"), c));
+			os.setStatus(MudarStatusOsBO.pesqCodigo(rs.getInt("cd_mudar_status"), c));
 			os.setTipo(TipoOrdemBO.pesqCodigo(rs.getInt("cd_tipo_ordem"), c));
 			os.setTotal(rs.getDouble("vl_total"));
 			os.setVeiculo(VeiculoBO.pesqCodigo(rs.getInt("cd_veiculo"), c));

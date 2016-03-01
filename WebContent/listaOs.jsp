@@ -47,7 +47,7 @@
 			<div id="morris-bar-chart"></div>
 			<div id="morris-donut-chart"></div>
 		</div>
-       <%@include file="../topo.jsp" %>
+       <%@include file="topo.jsp" %>
 	
             
 
@@ -92,6 +92,18 @@
           						<div class="form-group col-md-5">
           							<label for="data2">Data Término</label>
           							<input type="date" name="data2" id="data2" class="form-control">
+          						</div>
+          					</div>
+          					
+          					<div class="row">
+          						<div class="form-group col-md-5">
+          							<label for="status">Status</label>
+          							<select name="status" id="status" class="form-control">
+          								<option value="">Selecione</option>
+          								<c:forEach var="st" items="${listStatus }">
+          									<option value="${st.codigo }">${st.descricao }</option>
+          								</c:forEach>
+          							</select>
           						</div>
           					</div>
           					

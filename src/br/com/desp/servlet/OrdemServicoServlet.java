@@ -56,6 +56,17 @@ public class OrdemServicoServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String acao = req.getParameter("acao");
 		String retorno = "";
+		Connection c;
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			List<StatusOs> listStatus = StatusOsBO.listar(c);
+			req.setAttribute("listStatus", listStatus);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		switch (acao) {
 		case "listar":
 			listar(req);
@@ -292,10 +303,12 @@ public class OrdemServicoServlet extends HttpServlet {
 			String numOs = "";
 			String placa = "";
 			String cpf = "";
+			String strStatus = "";
 			
 			numOs = req.getParameter("numOS");
 			placa = req.getParameter("placa");
 			cpf = req.getParameter("cpf");
+			strStatus = req.getParameter("status");
 			
 		
 			
@@ -327,7 +340,12 @@ public class OrdemServicoServlet extends HttpServlet {
 				Cliente cli = ClienteBO.pesqCpf(cpf, c);
 				listaOs = OrdemServicoBO.pesqCliente(cli.getCodigo(), c);
 				req.setAttribute("msg", "Lista filtrada com sucesso!");
+			}else if(!strStatus.equals("")){
+				int cdStatus = Integer.parseInt(strStatus);
+				listaOs = OrdemServicoBO.pesqStatus(cdStatus, c);
+				req.setAttribute("msg", "Lista filtrada com sucesso!");
 			}else if(data1.length() == 10){
+			
 				data1 = DataUtil.arrumarData(data1);
 				data2 = DataUtil.arrumarData(data2);
 				Calendar calData1 = DataUtil.converter(data1);
@@ -368,6 +386,7 @@ public class OrdemServicoServlet extends HttpServlet {
 				cli.setNome(StringUtil.primeiraPalavra(os.getCliente().getNome()));
 				os.setCliente(cli);
 			}
+			
 			List<FormaPagamento> fo = FormaPagamentoBO.listar(c);
 			req.setAttribute("formasPag", fo);
 			req.setAttribute("listaOs", listaOs);
@@ -387,6 +406,16 @@ public class OrdemServicoServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String acao = req.getParameter("acao");
 		String retorno = "";
+		
+		try {
+			Connection c = ConexaoFactory.controlarInstancia().getConnection();
+			List<StatusOs> listStatus = StatusOsBO.listar(c);
+			req.setAttribute("listStatus", listStatus);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		switch (acao) {
 		case "addServico":
 			addServico(req);

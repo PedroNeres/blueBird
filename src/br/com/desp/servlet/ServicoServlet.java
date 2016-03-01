@@ -66,8 +66,32 @@ public class ServicoServlet extends HttpServlet {
 			carregarHome(req);
 			retorno = "listarServicos.jsp";
 			break;
+		case "carregarSer":
+			carregarSer(req);
+			retorno = "editarServico.jsp";
+			break;
 		}
 		req.getRequestDispatcher(retorno).forward(req, resp);
+	}
+
+	private void carregarSer(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			
+			int codigo = Integer.parseInt(req.getParameter("cdSer"));
+			Servico ser = ServicoBO.pesqCodigo(codigo, c);
+			
+			req.setAttribute("ser", ser);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void listar(HttpServletRequest req) {
