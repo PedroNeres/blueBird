@@ -56,12 +56,13 @@ public class ServicoDAO {
 	}
 	
 	public void editar(Servico ser, Connection c)throws Exception{
-		String sql = "UPDATE T_DESP_SERVICOS SET ds_servico = ?, vl_taxa = ?, vl_hono = ?, vl_total = ?";
+		String sql = "UPDATE T_DESP_SERVICOS SET vl_taxa = ?, vl_hono = ?, vl_total = ? WHERE cd_servico = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
-		estrutura.setString(1, ser.getDescricao());
-		estrutura.setDouble(2, ser.getVlrTaxa());
-		estrutura.setDouble(3, ser.getVlrHono());
-		estrutura.setDouble(4, ser.getVlrTotal());
+		
+		estrutura.setDouble(1, ser.getVlrTaxa());
+		estrutura.setDouble(2, ser.getVlrHono());
+		estrutura.setDouble(3, ser.getVlrTotal());
+		estrutura.setInt(4, ser.getCodigo());
 		estrutura.execute();
 		estrutura.close();
 	}

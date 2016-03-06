@@ -70,7 +70,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Painel de Controle!</h1>
+                    <h3 class="page-header">Painel de Controle!</h3>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -81,6 +81,9 @@
                 <div class="col-lg-10">
         
                 <div class="row">
+                
+                <c:if test="${user.cargo.codigo < 3 }">
+                
                 	<div class="col-lg-4 col-md-4">
                 		<div class="panel panel-green">
                         <div class="panel-heading">
@@ -94,7 +97,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="cheque?acao=listarAberto">
+                        <a href="cheque?acao=listarAberto&cdFilial=${user.filial.codigo }">
                             <div class="panel-footer">
                                 <span class="pull-left">Mais detalhes</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -103,6 +106,9 @@
                         </a>
                     </div>
                 	</div>
+                	
+                	</c:if>
+                	
                 	<div class="col-lg-4 col-md-4">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -138,7 +144,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="contas?acao=listarVencendo">
+                        <a href="contas?acao=listarVencendo&cdFilial=${user.filial.codigo }">
                             <div class="panel-footer">
                                 <span class="pull-left">Mais detalhes</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>

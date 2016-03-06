@@ -74,19 +74,21 @@ public class TelefoneDAO {
 	
 	
 	public void atualizar(List<Telefone> t, Connection conexao) throws Exception {
-		
-		String sql = "UPDATE T_DESP_TELEFONE SET (nr_ddd = ?, nr_fone = ?)"+
+		String sql = "";
+		for(Telefone tel: t){
+			
+			sql = "UPDATE T_DESP_TELEFONE SET nr_ddd = ?, nr_fone = ? "+
 				"WHERE cd_fone = ?";
 		
-		PreparedStatement estruturaTel = conexao.prepareStatement(sql);
-		
-		for(Telefone tel: t){
+			PreparedStatement estruturaTel = conexao.prepareStatement(sql);
 			estruturaTel.setInt(1, tel.getDdd());
+			System.out.println(tel.getNumero());
 			estruturaTel.setInt(2, tel.getNumero());
 			estruturaTel.setInt(3, tel.getCodigo());
 			estruturaTel.execute();
+			estruturaTel.close();
 		}
-		estruturaTel.close();
+		
 	}
 	
 	public List<Integer> recuperarTipos(Connection conexao)throws Exception{

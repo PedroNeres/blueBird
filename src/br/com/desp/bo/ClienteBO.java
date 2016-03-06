@@ -35,8 +35,8 @@ public abstract class ClienteBO {
 		new ClienteDAO().editar(cli, c);
 	}
 	
-	public static List<Cliente> listar(Connection c)throws Exception{
-		return new ClienteDAO().listarCliente(c);
+	public static List<Cliente> listar(int cdFilial, Connection c)throws Exception{
+		return new ClienteDAO().listarCliente(cdFilial, c);
 	}
 	
 	public static List<Cliente> listarFilial(int cdFilial, Connection c)throws Exception{

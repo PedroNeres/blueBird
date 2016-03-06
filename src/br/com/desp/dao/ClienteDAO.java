@@ -46,20 +46,22 @@ public class ClienteDAO {
 		pes.setTelefone(cli.getTelefone());
 		pes.setUsuario(cli.getUsuario());
 		PessoaBO.atualizar(pes, c);
-		String sql = "UPDATE T_DESP_CLIENTE SET(cd_filial = ?, nr_cpf = ?) WHERE cd_cliente = ?";
+		String sql = "UPDATE T_DESP_CLIENTE SET cd_filial = ?, nr_cpf = ? WHERE cd_cliente = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		estrutura.setInt(1, cli.getFilial().getCodigo());
 		estrutura.setString(2, Long.toString(cli.getCpf()));
+		estrutura.setInt(3, cli.getCodigo());
 		estrutura.execute();
 		estrutura.close();
 	}
 	
-	public List<Cliente> listarCliente(Connection c)throws Exception{
+	public List<Cliente> listarCliente(int cdFilial, Connection c)throws Exception{
 		List<Cliente> clientes = new ArrayList<Cliente>();
 		Cliente cli = null;
 		Pessoa pes = null;
-		String sql = "SELECT * FROM T_DESP_CLIENTE";
+		String sql = "SELECT * FROM T_DESP_CLIENTE WHERE cd_filial = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
+		estrutura.setInt(1, cdFilial);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			cli = new Cliente();

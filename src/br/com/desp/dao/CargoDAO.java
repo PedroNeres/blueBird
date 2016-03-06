@@ -43,7 +43,7 @@ import br.com.desp.beans.Cargo;
 		public List<Cargo> listar(Connection c)throws Exception{
 			List<Cargo> cargos = new ArrayList<Cargo>();
 			Cargo car = null;
-			String sql = "SELECT * FROM T_DESP_TIPO_CARGO";
+			String sql = "SELECT * FROM T_DESP_TIPO_CARGO ORDER BY cd_cargo";
 			PreparedStatement estrutura = c.prepareStatement(sql);
 		
 			ResultSet rs = estrutura.executeQuery();

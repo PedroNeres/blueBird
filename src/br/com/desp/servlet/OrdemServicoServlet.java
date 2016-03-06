@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import br.com.desp.beans.Cheque;
 import br.com.desp.beans.Cliente;
+import br.com.desp.beans.Entrada;
 import br.com.desp.beans.FormaPagamento;
 import br.com.desp.beans.Funcionario;
 import br.com.desp.beans.ItemServico;
@@ -27,6 +28,7 @@ import br.com.desp.beans.StatusOs;
 import br.com.desp.beans.Veiculo;
 import br.com.desp.bo.ChequeBO;
 import br.com.desp.bo.ClienteBO;
+import br.com.desp.bo.EntradaBO;
 import br.com.desp.bo.FormaPagamentoBO;
 import br.com.desp.bo.FuncionarioBO;
 import br.com.desp.bo.OrdemServicoBO;
@@ -122,6 +124,7 @@ public class OrdemServicoServlet extends HttpServlet {
 					(Integer.parseInt(req.getParameter("forPagamento")), c);
 			String numero = req.getParameter("codPag");
 			String observacoes = req.getParameter("desPag");
+			
 			OrdemServico ordemServico = OrdemServicoBO.pesqNumeroOs
 					(Integer.parseInt(req.getParameter("numOs")), c);
 			double vlPagao = NumeroUtil.strDouble(req.getParameter("vlrPag"));
@@ -142,6 +145,15 @@ public class OrdemServicoServlet extends HttpServlet {
 			ordemServico.getPagamento().add(pag);
 			ordemServico.setVlrPago(ordemServico.getVlrPago() + vlPagao);
 			OrdemServicoBO.editar(ordemServico, c);
+			
+			Entrada ent = new Entrada();
+			ent.setCodigo(0);
+			ent.setDescricao("Pagamento adicionado da O.S nº" + ordemServico.getNumero());
+			ent.setDtEntrada(ordemServico.getDtEntrada());
+			ent.setValor(vlPagao);
+			ent.setFilial(ordemServico.getAtendente().getFilial());
+			EntradaBO.cadastrar(ent, c);
+			
 			req.setAttribute("msg", "O pagamento foi adicionado com sucesso");
 			}
 			c.commit();
@@ -310,6 +322,8 @@ public class OrdemServicoServlet extends HttpServlet {
 			cpf = req.getParameter("cpf");
 			strStatus = req.getParameter("status");
 			
+			int cdFilial = Integer.parseInt(req.getParameter("cdFilial"));
+			
 		
 			
 			String data1 = req.getParameter("data1");
@@ -329,20 +343,20 @@ public class OrdemServicoServlet extends HttpServlet {
 				}
 				
 				OrdemServico os = new OrdemServico();
-				os = OrdemServicoBO.pesqNumeroOs(numOsInt, c);
+				os = OrdemServicoBO.pesqNumeroOsFilial(cdFilial, numOsInt, c);
 				listaOs.add(os);
 				req.setAttribute("msg", "Lista filtrada com sucesso!");
 			}else if(!placa.equals("")){
 				Veiculo veic = VeiculoBO.pesqPlaca(placa, c);
-				listaOs = OrdemServicoBO.pesqVeiculo(veic.getCodigo(), c);
+				listaOs = OrdemServicoBO.pesqVeiculo(cdFilial, veic.getCodigo(), c);
 				req.setAttribute("msg", "Lista filtrada com sucesso!");
 			}else if(!cpf.equals("")){
 				Cliente cli = ClienteBO.pesqCpf(cpf, c);
-				listaOs = OrdemServicoBO.pesqCliente(cli.getCodigo(), c);
+				listaOs = OrdemServicoBO.pesqCliente(cdFilial, cli.getCodigo(), c);
 				req.setAttribute("msg", "Lista filtrada com sucesso!");
 			}else if(!strStatus.equals("")){
 				int cdStatus = Integer.parseInt(strStatus);
-				listaOs = OrdemServicoBO.pesqStatus(cdStatus, c);
+				listaOs = OrdemServicoBO.pesqStatus(cdFilial, cdStatus, c);
 				req.setAttribute("msg", "Lista filtrada com sucesso!");
 			}else if(data1.length() == 10){
 			
@@ -350,7 +364,7 @@ public class OrdemServicoServlet extends HttpServlet {
 				data2 = DataUtil.arrumarData(data2);
 				Calendar calData1 = DataUtil.converter(data1);
 				Calendar calData2 = DataUtil.converter(data2);
-				listaOs = OrdemServicoBO.pesqData(calData1, calData2, c);
+				listaOs = OrdemServicoBO.pesqData(cdFilial, calData1, calData2, c);
 				req.setAttribute("msg", "Lista filtrada com sucesso!");
 			}else{
 				req.setAttribute("erro", "Preencha pelo menos um dos ítens de pesquisa!");
@@ -373,8 +387,8 @@ public class OrdemServicoServlet extends HttpServlet {
 		
 		try {
 			c = ConexaoFactory.controlarInstancia().getConnection();
-			
-			List<OrdemServico> listaOs = OrdemServicoBO.listar(c);
+			int cdFilial = Integer.parseInt(req.getParameter("cdFilial"));
+			List<OrdemServico> listaOs = OrdemServicoBO.listar(cdFilial, c);
 			for(OrdemServico os: listaOs){
 				Funcionario fun = new Funcionario();
 				fun = os.getAtendente();
@@ -518,6 +532,15 @@ public class OrdemServicoServlet extends HttpServlet {
 			sessao.setAttribute("os", os2);
 			req.setAttribute("os", os);
 			
+			Entrada ent = new Entrada();
+			ent.setCodigo(0);
+			ent.setDescricao("O.S nº" + os.getNumero() + ", serviço de " + os.getTipo().getDescricao());
+			ent.setDtEntrada(os.getDtEntrada());
+			ent.setValor(os.getVlrPago());
+			ent.setFilial(os.getAtendente().getFilial());
+			
+			EntradaBO.cadastrar(ent, c);
+			
 			listaPagtos = new ArrayList<Pagamento>();
 			servicos = new ArrayList<ItemServico>();
 			req.setAttribute("msg", "Ordem de Serviço Lançada com sucesso");
@@ -556,9 +579,10 @@ public class OrdemServicoServlet extends HttpServlet {
 			OrdemServico os = new OrdemServico();
 			HttpSession sessao = req.getSession();
 			os = (OrdemServico) sessao.getAttribute("os");
+			int cdFilial = Integer.parseInt(req.getParameter("cdFilial"));
 			cheque.setEmitente(os.getCliente().getNome());
 			cheque.setNumero(Integer.parseInt(req.getParameter("codPag")));
-			
+			cheque.setCdFilial(cdFilial);
 			ChequeBO.cadastrar(cheque, c);
 			
 		} catch (Exception e) {

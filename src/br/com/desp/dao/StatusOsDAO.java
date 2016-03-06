@@ -38,7 +38,7 @@ public class StatusOsDAO {
 	public List<StatusOs> listar(Connection c)throws Exception{
 		List<StatusOs> status = new ArrayList<StatusOs>();
 		StatusOs sta = null;
-		String sql = "SELECT * FROM T_DESP_STATUS_OS";
+		String sql = "SELECT * FROM T_DESP_STATUS_OS ORDER BY cd_status_os";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){

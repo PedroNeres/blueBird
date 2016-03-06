@@ -38,7 +38,7 @@ public class TipoVeiculoDAO {
 	public List<TipoVeiculo> listar(Connection c)throws Exception{
 		List<TipoVeiculo> tipos = new ArrayList<TipoVeiculo>();
 		TipoVeiculo tv = null;
-		String sql = "SELECT * FROM T_DESP_TIPO_VEICULO";
+		String sql = "SELECT * FROM T_DESP_TIPO_VEICULO ORDER BY cd_tipo";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){

@@ -70,10 +70,12 @@ public class PagamentoServlet extends HttpServlet {
 			List<TipoVeiculo> tiposVeiculos = new ArrayList<TipoVeiculo>();
 			List<Cheque> cheques = new ArrayList<Cheque>();
 			
+			int cdFilial = Integer.parseInt(req.getParameter("cdFilail"));
+			
 			pags = PagamentoBO.listarPagAberto(c);
 			tiposOrdem = TipoOrdemBO.listar(c);
 			tiposVeiculos = TipoVeiculoBO.listar(c);
-			cheques = ChequeBO.listarPendentes(c);
+			cheques = ChequeBO.listarPendentes(cdFilial, c);
 			
 			int qtnCheques = 0;
 			

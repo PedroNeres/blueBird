@@ -75,6 +75,7 @@
         					<div class="panel-body">
         				<form action="ordemServico" method="post">
         					<input type="hidden" name="acao" value="addPagamento">
+        					<input type="hidden" name="cdFilial" value="${user.filial.codigo }">
         					<div class="row">
         						<div class="form-group col-md-6">
         							<label for="forPagamento">Forma de Pagamento</label>

@@ -44,7 +44,7 @@ public class FormaPagamentoDAO {
 		List<FormaPagamento> formPagamentos = new ArrayList<FormaPagamento>();
 		FormaPagamento fp = null;
 		
-		String sql = "SELECT * FROM T_DESP_FORMA_PAGAMENTO";
+		String sql = "SELECT * FROM T_DESP_FORMA_PAGAMENTO ORDER BY cd_forma_pagamento";
 		
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		ResultSet rs = estrutura.executeQuery();

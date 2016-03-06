@@ -2,6 +2,7 @@ package br.com.desp.servlet;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +44,55 @@ public class ServicoServlet extends HttpServlet {
 			carregarHome(req);
 			retorno = "home.jsp";
 			break;
+		case "editar":
+			editar(req);
+			listar(req);
+			retorno = "listarServicos.jsp";
+			break;
 		}
 		
 		req.getRequestDispatcher(retorno).forward(req, resp);
+	}
+
+	private void editar(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			c.setAutoCommit(false);
+			
+			int codigo = Integer.parseInt(req.getParameter("codigo"));
+			String descricao = req.getParameter("descricao");
+			double hono = NumeroUtil.strDouble(req.getParameter("hono"));
+			double taxa = NumeroUtil.strDouble(req.getParameter("taxa"));
+			
+			Servico ser = new Servico();
+			ser.setCodigo(codigo);
+			ser.setDescricao(descricao.toUpperCase());
+			ser.setVlrHono(hono);
+			ser.setVlrTaxa(taxa);
+			ser.setVlrTotal(hono + taxa);
+			
+			ServicoBO.editar(ser, c);
+			req.setAttribute("msg", "Serviço editado com sucesso!");
+			
+			c.commit();
+			c.setAutoCommit(true);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			req.setAttribute("erro", e.getMessage());
+			try {
+				c.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				e1.printStackTrace();
+			}
+		}
+		
 	}
 
 	@Override
@@ -146,7 +193,7 @@ Connection c = null;
 			
 			int aprovar = 0;
 			
-			String descricao = req.getParameter("descricao");
+			String descricao = req.getParameter("descricao").toUpperCase();
 			String strTaxa = req.getParameter("vlTaxa");
 			String strHono = req.getParameter("vlHono");
 			
@@ -157,7 +204,7 @@ Connection c = null;
 			if(!strTaxa.equals("")){
 				ser.setVlrTaxa(NumeroUtil.strDouble(strTaxa));
 			}
-			if(!strTaxa.equals("")){
+			if(!strHono.equals("")){
 				ser.setVlrHono(NumeroUtil.strDouble(strHono));
 			}
 			ser.setVlrTotal(ser.getVlrHono()+ser.getVlrTaxa());

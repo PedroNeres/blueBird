@@ -28,6 +28,25 @@ public class StatusOsServlet extends HttpServlet{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String acao = req.getParameter("acao");
+		String retorno = "";
+		
+		switch (acao) {
+		case "listar":
+			listar(req);
+			retorno = "listaStatus.jsp";
+			break;
+
+		default:
+			break;
+		}
+		req.getRequestDispatcher(retorno).forward(req, resp);
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -42,8 +61,29 @@ public class StatusOsServlet extends HttpServlet{
 			carregar(req);
 			retorno = "home.jsp";
 			break;
+		case "listar":
+			listar(req);
+			retorno = "listaStatus.jsp";
+			break;
 		}
 		req.getRequestDispatcher(retorno).forward(req, resp);
+	}
+
+	private void listar(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			
+			List<StatusOs> statusOs = StatusOsBO.listar(c);
+			req.setAttribute("statusOs", statusOs);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void carregar(HttpServletRequest req) {

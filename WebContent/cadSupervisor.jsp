@@ -177,9 +177,18 @@
                                      	<label for="cargo">Cargo</label>
                                                 <select id="cargo" name="cargo"  class="form-control">
                                                     <option>Selecione</option>
-                                                    <c:forEach var="car" items="${cargo }">
-                                                    	<option value="${car.codigo }">${car.descricao }</option>
-                                                    </c:forEach>
+                                                    <c:if test="${user.cargo.codigo == 1 }">
+                                                    	<c:forEach var="car" items="${cargo }">
+                                                    		<option value="${car.codigo }">${car.descricao }</option>
+                                                    	</c:forEach>
+                                                    </c:if>
+                                                    <c:if test="${user.cargo.codigo == 2 }">
+                                                    	<c:forEach var="car" items="${cargo }">
+                                                    		<c:if test="${car.codigo > 2 }">
+                                                    			<option value="${car.codigo }">${car.descricao }</option>
+                                                    		</c:if>
+                                                    	</c:forEach>
+                                                    </c:if>
                                                 </select>
                                      </div>
                                      <div class="form-group col-md-6">
@@ -197,9 +206,18 @@
                                      	</label>
                                      	<select id="filial" name="filial" class="form-control">
                                      		<option>Selecione</option>
+                                     		<c:if test="${user.cargo.codigo == 1 }">
                                      		<c:forEach var="filial" items="${filiais }">
                                      			<option value="${filial.codigo }">${filial.nome }</option>
                                      		</c:forEach>
+                                     		</c:if>
+                                     		<c:if test="${user.cargo.codigo == 2 }">
+                                     			<c:forEach var="filial" items="${filiais }">
+                                     				<c:if test="${filial.codigo == user.filial.codigo }">
+                                     					<option value="${filial.codigo }">${filial.nome }</option>
+                                     				</c:if>
+                                     			</c:forEach>
+                                     		</c:if>
                                      	</select>
                                      </div>
                                      </div>

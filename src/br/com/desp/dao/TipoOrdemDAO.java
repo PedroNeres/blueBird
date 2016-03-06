@@ -38,7 +38,7 @@ public class TipoOrdemDAO {
 	public List<TipoOrdemServico> listar(Connection c)throws Exception{
 		List<TipoOrdemServico> tipos = new ArrayList<TipoOrdemServico>();
 		TipoOrdemServico tipoOrdem = null;
-		String sql = "SELECT * FROM T_DESP_TIPO_ORDEM";
+		String sql = "SELECT * FROM T_DESP_TIPO_ORDEM ORDER BY cd_tipo_ordem";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){

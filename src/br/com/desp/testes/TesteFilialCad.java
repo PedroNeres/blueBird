@@ -23,10 +23,10 @@ public class TesteFilialCad {
 			c.setAutoCommit(false);
 			Filial fil = new Filial();
 			
-			fil.setNome("DESPACHANTE GOL DE PLACA");
+			fil.setNome("DESPACHANTE GOL DE PLACA LAVRAS ");
 			
 			Usuario user = new Usuario();
-			user.setEmail("GILEADE@GOLDEPLACA.COM.BR");
+			user.setEmail("GOLSINHO@GMAIL.COM");
 			user.setPassword("135086");
 			
 			fil.setUsuario(user);
@@ -41,21 +41,21 @@ public class TesteFilialCad {
 			List<Telefone> tels = new ArrayList<Telefone>();
 			Telefone tel = new Telefone();
 			tel.setDdd(11);
-			tel.setNumero(24317010);
+			tel.setNumero(24335544);
 			tels.add(tel);
 			tel = new Telefone();
 			tel.setDdd(11);
-			tel.setNumero(24322795);
+			tel.setNumero(24356585);
 			tels.add(tel);
 			
 			fil.setTelefone(tels);
 			
 			Endereco end = new Endereco();
-			end.setBairro("JARDIM PRESIDENTE DUTRA");
+			end.setBairro("LAVRAS");
 			end.setCep(07170350);
 			end.setCidade("GUARULHOS");
-			end.setLogradouro("AV. PAPA JOÃO PAULO I");
-			end.setNumero(3947);
+			end.setLogradouro("AV. JOAO RANGEL FILHO");
+			end.setNumero(546);
 			end.setComplemento("1 andar");
 			end.setUf("SP");
 			

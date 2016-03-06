@@ -83,11 +83,12 @@ public class OrdemServicoDAO {
 		estrutura.close();
 	}
 	
-	public List<OrdemServico> listar(Connection c)throws Exception{
+	public List<OrdemServico> listar(int cdFilial, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO ORDER BY nr_ordem DESC";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ? ORDER BY nr_ordem DESC";
 		PreparedStatement estrutura = c.prepareStatement(sql);
+		estrutura.setInt(1, cdFilial);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -112,13 +113,14 @@ public class OrdemServicoDAO {
 		return ordemServicos;
 	}
 	
-	public List<OrdemServico> pesqData(Calendar data1, Calendar data2, Connection c)throws Exception{
+	public List<OrdemServico> pesqData(int cdFilial, Calendar data1, Calendar data2, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO WHERE dt_entrada BETWEEN ? AND ?";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ?  AND dt_entrada BETWEEN ? AND ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
-		estrutura.setDate(1, new Date(data1.getTimeInMillis()));
-		estrutura.setDate(2, new Date(data2.getTimeInMillis()));
+		estrutura.setInt(1, cdFilial);
+		estrutura.setDate(2, new Date(data1.getTimeInMillis()));
+		estrutura.setDate(3, new Date(data2.getTimeInMillis()));
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -146,8 +148,9 @@ public class OrdemServicoDAO {
 	public List<OrdemServico> pesqFilial(int cdFilial, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
+		estrutura.setInt(1, cdFilial);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -177,10 +180,11 @@ public class OrdemServicoDAO {
 	public List<OrdemServico> pesqFilialData(Calendar data1, Calendar data2, int cdFilial, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO WHERE dt_entrada BETWEEN ? AND ?";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) AND FUN.CD_FILIAL = ? WHERE dt_entrada BETWEEN ? AND ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
-		estrutura.setDate(1, new Date(data1.getTimeInMillis()));
-		estrutura.setDate(2, new Date(data2.getTimeInMillis()));
+		estrutura.setInt(1, cdFilial);
+		estrutura.setDate(2, new Date(data1.getTimeInMillis()));
+		estrutura.setDate(3, new Date(data2.getTimeInMillis()));
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -207,12 +211,13 @@ public class OrdemServicoDAO {
 		return ordemServicos;
 	}
 	
-	public List<OrdemServico> pesqCliente(int cdCliente, Connection c)throws Exception{
+	public List<OrdemServico> pesqCliente(int cdFilial, int cdCliente, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO WHERE cd_cliente = ?";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ?  AND cd_cliente = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
-		estrutura.setInt(1, cdCliente);
+		estrutura.setInt(1, cdFilial);
+		estrutura.setInt(2, cdCliente);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -237,14 +242,15 @@ public class OrdemServicoDAO {
 		return ordemServicos;
 	}
 	
-	public List<OrdemServico> pesqClienteData(Calendar data1, Calendar data2, int cdCliente, Connection c)throws Exception{
+	public List<OrdemServico> pesqClienteData(int cdFilial, Calendar data1, Calendar data2, int cdCliente, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO WHERE dt_entrada BETWEEN ? AND ? AND cd_cliente = ?";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ?  AND dt_entrada BETWEEN ? AND ? AND cd_cliente = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
-		estrutura.setDate(1, new Date(data1.getTimeInMillis()));
-		estrutura.setDate(2, new Date(data2.getTimeInMillis()));
-		estrutura.setInt(3, cdCliente);
+		estrutura.setInt(1, cdFilial);
+		estrutura.setDate(2, new Date(data1.getTimeInMillis()));
+		estrutura.setDate(3, new Date(data2.getTimeInMillis()));
+		estrutura.setInt(4, cdCliente);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -269,12 +275,14 @@ public class OrdemServicoDAO {
 		return ordemServicos;
 	}
 	
-	public List<OrdemServico> pesqStatus(int cdStatus, Connection c)throws Exception{
+	public List<OrdemServico> pesqStatus(int cdFilial, int cdStatus, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_MUDAR_STATUS_OS ST ON(OS.CD_MUDAR_STATUS = ST.CD_MUDAR_STATUS_OS) WHERE ST.cd_status_os = ?";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) INNER JOIN T_DESP_MUDAR_STATUS_OS ST ON(OS.CD_MUDAR_STATUS = ST.CD_MUDAR_STATUS_OS) WHERE ST.cd_status_os = ? AND FUN.CD_FILIAL = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
+		
 		estrutura.setInt(1, cdStatus);
+		estrutura.setInt(2, cdFilial);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -304,7 +312,7 @@ public class OrdemServicoDAO {
 	public List<OrdemServico> pesqStatusData(int cdStatus, Calendar data1, Calendar data2, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO WHERE dt_entrada BETWEEN ? AND ?";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ? AND dt_entrada BETWEEN ? AND ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		estrutura.setDate(1, new Date(data1.getTimeInMillis()));
 		estrutura.setDate(2, new Date(data2.getTimeInMillis()));
@@ -334,12 +342,13 @@ public class OrdemServicoDAO {
 		return ordemServicos;
 	}
 	
-	public List<OrdemServico> pesqAtendente(int cdFuncionario, Connection c)throws Exception{
+	public List<OrdemServico> pesqAtendente(int cdFilial, int cdFuncionario, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO WHERE cd_funcionario = ?";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ? AND cd_funcionario = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
-		estrutura.setInt(1, cdFuncionario);
+		estrutura.setInt(1, cdFilial);
+		estrutura.setInt(2, cdFuncionario);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -364,14 +373,15 @@ public class OrdemServicoDAO {
 		return ordemServicos;
 	}
 	
-	public List<OrdemServico> pesqAtendData(int cdFuncionario, Calendar data1, Calendar data2, Connection c)throws Exception{
+	public List<OrdemServico> pesqAtendData(int cdFilial, int cdFuncionario, Calendar data1, Calendar data2, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO WHERE AND dt_entrada BETWEEN ? AND ? AND cd_funcionario = ?";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ? AND dt_entrada BETWEEN ? AND ? AND cd_funcionario = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
-		estrutura.setDate(1, new Date(data1.getTimeInMillis()));
-		estrutura.setDate(2, new Date(data2.getTimeInMillis()));
-		estrutura.setInt(3, cdFuncionario);
+		estrutura.setInt(1, cdFilial);
+		estrutura.setDate(2, new Date(data1.getTimeInMillis()));
+		estrutura.setDate(3, new Date(data2.getTimeInMillis()));
+		estrutura.setInt(4, cdFuncionario);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -396,12 +406,13 @@ public class OrdemServicoDAO {
 		return ordemServicos;
 	}
 	
-	public List<OrdemServico> pesqVeiculo(int cdVeiculo, Connection c)throws Exception{
+	public List<OrdemServico> pesqVeiculo(int cdFilial, int cdVeiculo, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO WHERE cd_veiculo = ?";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ? AND cd_veiculo = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
-		estrutura.setInt(1, cdVeiculo);
+		estrutura.setInt(1, cdFilial);
+		estrutura.setInt(2, cdVeiculo);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -426,12 +437,13 @@ public class OrdemServicoDAO {
 		return ordemServicos;
 	}
 	
-	public List<OrdemServico> pesVeicData(int cdVeiculo, Calendar data1, Calendar data2, Connection c)throws Exception{
+	public List<OrdemServico> pesVeicData(int cdFilial, int cdVeiculo, Calendar data1, Calendar data2, Connection c)throws Exception{
 		List<OrdemServico> ordemServicos = new ArrayList<OrdemServico>();
 		OrdemServico os = null;
-		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO WHERE dt_entrada BETWEEN ? AND ? AND cd_veiculo = ?";
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ? AND dt_entrada BETWEEN ? AND ? AND cd_veiculo = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
-		estrutura.setInt(1, cdVeiculo);
+		estrutura.setInt(1, cdFilial);
+		estrutura.setInt(2, cdVeiculo);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			os = new OrdemServico();
@@ -454,6 +466,34 @@ public class OrdemServicoDAO {
 		rs.close();
 		estrutura.close();
 		return ordemServicos;
+	}
+	
+	public OrdemServico pesqNumeroOsFilial(int cdFilial, int nrOs, Connection c)throws Exception{
+		OrdemServico os = new OrdemServico();
+		String sql = "SELECT * FROM T_DESP_ORDEM_SERVICO OS INNER JOIN T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) WHERE FUN.CD_FILIAL = ? AND nr_ordem = ?";
+		PreparedStatement estrutura = c.prepareStatement(sql);
+		estrutura.setInt(1, cdFilial);
+		estrutura.setInt(2, nrOs);
+		ResultSet rs = estrutura.executeQuery();
+		if(rs.next()){
+			Calendar cal = Calendar.getInstance();
+			os.setAtendente(FuncionarioBO.pesqCodigo(rs.getInt("cd_funcionario"), c));
+			os.setCliente(ClienteBO.pesqCodigo(rs.getInt("cd_cliente"), c));
+			os.setDesconto(rs.getDouble("vl_desconto"));
+			cal.setTime(rs.getDate("dt_entrada"));
+			os.setDtEntrada(cal);
+			os.setNumero(rs.getInt("nr_ordem"));
+			os.setPagamento(PagamentoBO.listarOrdem(os.getNumero(), c));
+			os.setServicos(ItemServicoBO.listarServOs(os.getNumero(), c));
+			os.setStatus(MudarStatusOsBO.pesqCodigo(rs.getInt("cd_mudar_status"), c));
+			os.setTipo(TipoOrdemBO.pesqCodigo(rs.getInt("cd_tipo_ordem"), c));
+			os.setTotal(rs.getDouble("vl_total"));
+			os.setVeiculo(VeiculoBO.pesqCodigo(rs.getInt("cd_veiculo"), c));
+			os.setVlrPago(rs.getDouble("vl_pago"));
+		}
+		rs.close();
+		estrutura.close();
+		return os;
 	}
 	
 	public OrdemServico pesqNumeroOs(int nrOs, Connection c)throws Exception{

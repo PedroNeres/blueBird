@@ -74,16 +74,21 @@
                 		<th>Cargo</th>
         
                 		<th></th>
+                		<c:if test="${user.cargo.codigo == 1 || user.cargo.codigo == 2 }">
                 		<th><a href="funcionario?acao=carregar&cdDespachante=${user.filial.despachante.codigo }&cdFilial=${user.filial.codigo }" title="Novo Funcionario"><i class="btn btn-default btn-sm glyphicon glyphicon-plus"></i></a></th>
+                		</c:if>
                 	</tr>
                 	<c:forEach var="fun" items="${funcionarios }">
                 		<tr>
                 			<td>${fun.nome }</td>
                 			<td>${fun.usuario.email }</td>
                 			<td>${fun.cargo.descricao }</td>
-                		
+                		<c:if test="${user.cargo.codigo == 1 || user.cargo.codigo == 2 }">
+        
                 			<td><a href="funcionario?acao=carregarFun&cdFun=${fun.codigo}" title="Editar" class="btn btn-success btn-sm glyphicon glyphicon-pencil"></a> </td>
 							<td><a href="" title="excluir" class="btn btn-danger btn-sm glyphicon glyphicon-remove" data-toggle="modal" data-target="#myModal${fun.codigo }"></a></td> 
+                		</c:if>
+                		
                 		</tr>
                 		
                 		<!-- Modal -->

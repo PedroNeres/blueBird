@@ -70,6 +70,7 @@
           				<div class="panel-body">
           					<form action="ordemServico" method="get" class="col-md-12">
           					<input type="hidden" name="acao" value="addOs">
+          					<input type="hidden" name="cdFilial" value="${user.filial.codigo }">
           					<legend><h4><strong>${qtnAdd }</strong> - Adicionar O.S para alterar status</h4></legend>
           					<div class="row">
           						<div class="form-group col-md-2">

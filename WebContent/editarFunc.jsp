@@ -135,16 +135,18 @@
         						</div>
         					
         							<legend>Contato</legend>
-        							
+        							<%int numero = 1; %>
         							<c:forEach var="tel" items="${fun.telefone }">
+        								<input type="hidden" name="cdTel<%=numero %>" value="${tel.codigo }">
         								<div class="form-group col-md-2">
-        									<label for="ddd">DDD</label>
-        									<input type="text" name="ddd1" value="${tel.ddd }" id="ddd" class="form-control">
+        									<label for="ddd<%=numero%>">DDD</label>
+        									<input type="text" name="ddd<%=numero%>" value="${tel.ddd }" id="ddd<%=numero%>" class="form-control">
         							</div>
         								<div class="form-group col-md-4">
-        									<label for="tel${tel.numero }"></label>
-        									<input type="text" name="tel1" value="${tel.numero }" id="tel" class="form-control">
+        									<label for="tel<%=numero%>"></label>
+        									<input type="text" name="tel<%=numero%>" value="${tel.numero }" id="tel<%=numero%>" class="form-control">
         								</div>
+        								<%numero++; %>
         							</c:forEach>
         							
         							
@@ -155,7 +157,7 @@
         								<div class="input-group">
         						
                                             <span class="input-group-addon">@</span>
-                                            <input type="email" id="email" readonly="readonly" value="${fun.usuario.email }" class="form-control" name="email">
+                                            <input type="email" name="email" id="email" readonly="readonly" value="${fun.usuario.email }" class="form-control" >
                                       	</div>
                                        </div>
                                        

@@ -41,10 +41,31 @@ public class TipoVeiculoServlet extends HttpServlet {
 			carregar(req);
 			retorno = "home.jsp";
 			break;
+		case "listar":
+			listar(req);
+			retorno = "listarTipoVeiculo.jsp";
+			break;
 		}
 		req.getRequestDispatcher(retorno).forward(req, resp);
 	}
 	
+	private void listar(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			
+			List<TipoVeiculo> tiposVeiculo = TipoVeiculoBO.listar(c);
+			
+			req.setAttribute("tiposVeiculo", tiposVeiculo);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+
 	private void carregar(HttpServletRequest req) {
 		// TODO Auto-generated method stub
 		// TODO Auto-generated method stub

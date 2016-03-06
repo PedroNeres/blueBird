@@ -41,12 +41,32 @@ public class TipoOsServlet extends HttpServlet{
 			carregar(req);
 			retorno = "home.jsp";
 			break;
-
+		case "listar":
+			listar(req);
+			retorno = "listaTipoOs.jsp";
+			break;
 		}
 		req.getRequestDispatcher(retorno).forward(req, resp);
 	
 	}
 	
+	private void listar(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			
+			List<TipoOrdemServico> tiposOs = TipoOrdemBO.listar(c);
+			req.setAttribute("tipoOs", tiposOs);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+
 	private void carregar(HttpServletRequest req) {
 		// TODO Auto-generated method stub
 		

@@ -76,30 +76,22 @@ public class UsuarioServlet extends HttpServlet {
 			List<Pagamento> pags = new ArrayList<Pagamento>();
 			List<TipoOrdemServico> tiposOrdem = new ArrayList<TipoOrdemServico>();
 			List<TipoVeiculo> tiposVeiculos = new ArrayList<TipoVeiculo>();
-			List<Cheque> cheques = new ArrayList<Cheque>();
-			List<Contas> contas = new ArrayList<Contas>();
+			
+			
 			List<Mensagem> mensagens = new ArrayList<Mensagem>();
 			
 			HttpSession sessao = req.getSession();
 			
 			String email = req.getParameter("email");
-			
 		
 			
 			pags = PagamentoBO.listarPagAberto(c);
 			tiposOrdem = TipoOrdemBO.listar(c);
 			tiposVeiculos = TipoVeiculoBO.listar(c);
-			cheques = ChequeBO.listarPendentes(c);
-			contas = ContasBO.pesqStatus(1, c);
+			
 			mensagens = MensagemBO.naoLidos(email, c);
 			
-			int qtnCheques = 0;
 			
-			for(Cheque che: cheques){	
-				if(DataUtil.CalendarString(che.getDtDeposito()).equals(DataUtil.CalendarString(Calendar.getInstance()))){
-					qtnCheques ++;
-				}
-			}
 			
 			int qtnMensagens = 0;
 			
@@ -107,18 +99,12 @@ public class UsuarioServlet extends HttpServlet {
 				qtnMensagens ++;
 			}
 			
-			int qtnContas = 0;
-			
-			for(Contas cont: contas){
-				qtnContas ++;
-			}
 			
 			
 			sessao.setAttribute("pagAberto", pags);
 			sessao.setAttribute("tpVeiculo", tiposVeiculos);
 			sessao.setAttribute("tpOrdem", tiposOrdem);
-			sessao.setAttribute("qtnCheques", qtnCheques);
-			sessao.setAttribute("qtnContas", qtnContas);
+			
 			sessao.setAttribute("qtnMensagens", qtnMensagens);
 			sessao.setAttribute("mensagens", mensagens);
 			
@@ -218,10 +204,31 @@ public class UsuarioServlet extends HttpServlet {
 			usu.setEmail(email);
 			usu.setPassword(senha);
 			Funcionario fun = FuncionarioBO.pesqEmail(usu, c);
+			int cdFilial = fun.getFilial().getCodigo();
+			
+			List<Cheque> cheques = new ArrayList<Cheque>();
+			cheques = ChequeBO.listarPendentes(cdFilial, c);
+			
+			int qtnCheques = 0;
+			
+			for(Cheque che: cheques){	
+				if(DataUtil.CalendarString(che.getDtDeposito()).equals(DataUtil.CalendarString(Calendar.getInstance()))){
+					qtnCheques ++;
+				}
+			}
+			
+			List<Contas> conta = new ArrayList<Contas>();
+			conta = ContasBO.pesqStatus(1, cdFilial, c);
+			
+			int qtnContas = 0;
+			
+			
+		
+			
 			Calendar dtHoje = Calendar.getInstance();
 			String strDtHoje = DataUtil.CalendarString(dtHoje);
 			
-			List<Contas> contas = ContasBO.listar(c);
+			List<Contas> contas = ContasBO.listar(cdFilial, c);
 			for(Contas cont: contas){
 				String dt = DataUtil.CalendarString(cont.getProxVenc());
 				int dia = Integer.parseInt(dt.substring(0,2));
@@ -239,14 +246,18 @@ public class UsuarioServlet extends HttpServlet {
 					}
 				}
 			}
-			
+			for(Contas cont: conta){
+				qtnContas ++;
+			}
 			int ver = PessoaBO.verEmail(email, c);
 			HttpSession sessao = req.getSession();
 			sessao.setAttribute("dtHoje", dtHoje);
+			sessao.setAttribute("qtnCheques", qtnCheques);
+			sessao.setAttribute("qtnContas", qtnContas);
 			if(ver == 0){
 				req.setAttribute("erro", "Este usuário não existe!");
 				retorno = "index.jsp";
-			}else if(fun.getUsuario().getEmail().equals(usu.getEmail()) && fun.getUsuario().getPassword().equals(usu.getPassword())){
+			}else if(fun.getUsuario().getEmail().equals(usu.getEmail()) && fun.getUsuario().getPassword().equals(usu.getPassword()) && fun.getStatus() == 1){
 				fun = UsuarioBO.logarFun(usu, c);
 				sessao.setAttribute("user", fun);
 				retorno = "home.jsp";

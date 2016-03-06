@@ -256,12 +256,39 @@ public class FuncionarioServlet extends HttpServlet{
 			end.setNumero(Integer.parseInt(req.getParameter("numero")));
 			end.setUf(req.getParameter("uf"));
 			fun.setEndereco(end);
-			System.out.println(fun.getEndereco().getBairro() + "teste");
+			
+			String ddd1 = req.getParameter("ddd1");
+			String ddd2 = req.getParameter("ddd2");
+			String tel1 = req.getParameter("tel1");
+			String tel2 = req.getParameter("tel2");
+			
+			List<Telefone> tels = new ArrayList<Telefone>();
+			Telefone tel = new Telefone();
+			
+			if(!ddd1.equals("")){
+				tel.setDdd(Integer.parseInt(ddd1));
+			}else{
+				tel.setDdd(11);
+			}
+			if(!tel1.equals("")){
+				tel.setNumero(Integer.parseInt(tel1));
+				tel.setCodigo(Integer.parseInt(req.getParameter("cdTel1")));
+				tels.add(tel);
+			}else{
+				tel.setNumero(1111111);
+				tel.setCodigo(0);
+				tels.add(tel);
+			}
+			fun.setTelefone(tels);
+			
 			Filial fil = new Filial();
 			fil = FilialBO.pesqCodigo(Integer.parseInt(req.getParameter("filial")), c);
 			fun.setFilial(fil);
 			fun.setNome(req.getParameter("nome"));
 			fun.setSalario(Double.parseDouble(req.getParameter("salario")));
+			Usuario usu = new Usuario();
+			usu.setEmail(req.getParameter("email"));
+			fun.setUsuario(usu);
 			
 			FuncionarioBO.editar(fun, c);
 			req.setAttribute("msg", "Usuário editado com sucesso!");

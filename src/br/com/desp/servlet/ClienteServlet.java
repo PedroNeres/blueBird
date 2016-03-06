@@ -52,8 +52,29 @@ public class ClienteServlet extends HttpServlet{
 		case "verificar":
 			retorno = verificar(req);
 			break;
+		case "carregar":
+			carregarCli(req);
+			retorno = "editarCliente.jsp";
+			break;
 		}
 		req.getRequestDispatcher(retorno).forward(req, resp);
+	}
+
+	private void carregarCli(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		Connection c = null;
+		String retorno = "";
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			int cdCliente = Integer.parseInt(req.getParameter("cdCli"));
+			Cliente cli = ClienteBO.pesqCodigo(cdCliente, c);
+			req.setAttribute("cliente", cli);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			req.setAttribute("erro", e.getMessage());
+		}
 	}
 
 	private void carregar(HttpServletRequest req) {
@@ -134,8 +155,8 @@ Connection c = null;
 			c.setAutoCommit(false);
 			
 			List<Cliente> clientes = new ArrayList<Cliente>();
-			
-			clientes = ClienteBO.listar(c);
+			int cdFilial = Integer.parseInt(req.getParameter("cdFilial"));
+			clientes = ClienteBO.listar(cdFilial, c);
 			
 			req.setAttribute("cliente", clientes);
 			c.commit();
@@ -161,8 +182,85 @@ Connection c = null;
 		case "osCadastrar":
 			cadastrar(req);
 			retorno = "verVeiculo.jsp";
+			break;
+		case "editar":
+			editar(req);
+			listar(req);
+			retorno = "listarClientes.jsp";
+			break;
 		}
 		req.getRequestDispatcher(retorno).forward(req, resp);
+	}
+
+	private void editar(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try{
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			c.setAutoCommit(false);
+			
+			Cliente cli = new Cliente();
+			cli.setCodigo(Integer.parseInt(req.getParameter("codigo")));
+			cli.setCpf(Long.parseLong(req.getParameter("cpf")));
+			cli.setNome(req.getParameter("nome").toUpperCase());
+			cli.setFilial(FilialBO.pesqCodigo(Integer.parseInt(req.getParameter("cdFilial")), c));
+			
+			Usuario usu = new Usuario();
+			usu.setEmail(req.getParameter("email").toUpperCase());
+			usu.setPassword(req.getParameter("cpf"));
+			cli.setUsuario(usu);
+			
+			Endereco end = new Endereco();
+			end.setBairro(req.getParameter("bairro").toUpperCase());
+			end.setCep(Integer.parseInt(req.getParameter("cep")));
+			end.setCidade(req.getParameter("cidade").toUpperCase());
+			end.setComplemento(req.getParameter("complemento").toUpperCase());
+			end.setLogradouro(req.getParameter("logradouro").toUpperCase());
+		
+			end.setNumero(Integer.parseInt(req.getParameter("numero")));
+			
+			end.setUf(req.getParameter("uf").toUpperCase());
+			cli.setEndereco(end);
+			
+			String ddd1 = req.getParameter("ddd1");
+			String ddd2 = req.getParameter("ddd2");
+			String numero1 = req.getParameter("tel1");
+			String numero2 = req.getParameter("tel2");
+			
+			List<Telefone> tels = new ArrayList<Telefone>();
+			
+			Telefone tel = null;
+	
+				tel = new Telefone();
+				if(!ddd1.equals("")){
+					tel.setDdd(Integer.parseInt(ddd1));
+				}
+				if(!numero1.equals("")){
+					tel.setNumero(Integer.parseInt(numero1));
+					tel.setCodigo(Integer.parseInt(req.getParameter("cdTel1")));
+				}
+				tels.add(tel);			
+			
+				cli.setTelefone(tels);
+			
+		
+				ClienteBO.editar(cli, c);
+				req.setAttribute("msg", "Cliente editado com sucesso");
+				c.commit();
+			
+				c.setAutoCommit(true);
+		}catch(Exception e){
+			try {
+				c.rollback();
+				e.printStackTrace();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		
 	}
 
 	private void cadastrar(HttpServletRequest req) {

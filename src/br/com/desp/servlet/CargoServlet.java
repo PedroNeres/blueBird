@@ -28,6 +28,43 @@ public class CargoServlet extends HttpServlet{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+		String acao = req.getParameter("acao");
+		String retorno = "";
+		
+		switch (acao) {
+		case "listar":
+			listar(req);
+			retorno = "listaCargo.jsp";
+			break;
+		default:
+			break;
+		}
+		req.getRequestDispatcher(retorno).forward(req, resp);
+		
+	}
+
+	private void listar(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			
+			List<Cargo> cargos = CargoBO.listar(c);
+			req.setAttribute("cargo", cargos);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)

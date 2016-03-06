@@ -19,6 +19,21 @@
             </div>
             <!-- /.navbar-header -->
 
+			<ul class="nav navbar-nav">
+			 <li><a href="#">Caixa</a>
+       		 <li><a href="#">Relatórios</a></li>
+       		 <li class="dropdown">
+       		 	<a href="#" class="dropdown-toggle" data-toggle="dropdown" 
+       		 		role="button" aria-haspopup="true" aria-expanded="false">Ajuda <span class="caret"></span></a>
+       		 	<ul class="dropdown-menu">
+       		 		<li><a href="#">Manual</a></li>
+       		 		<li class="divider"></li>
+       		 		<li><a href="mensagem?acao=perguntar">Perguntar</a></li>
+       		 	</ul>
+       		 </li>
+      </ul>
+
+
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -91,6 +106,7 @@
                         	<form action="ordemServico" method="get">
                             <div class="input-group custom-search-form">
                             	<input type="hidden" name="acao" value="pesquisar">
+                            	<input type="hidden" name="cdFilial" value="${user.filial.codigo }">
                                 <input type="text" class="form-control" name="numOS" placeholder="Search O.S ....">
                                 <span class="input-group-btn">
                                
@@ -110,7 +126,7 @@
                                     <a href="verCliente.jsp"><i class="fa fa-plus-circle fa-fw"></i>Nova O.S</a>
                                 </li>
                                 <li>
-                                    <a href="ordemServico?acao=listar"><i class="fa fa-th-list fa-fw"></i>Listar</a>
+                                    <a href="ordemServico?acao=listar&cdFilial=${user.filial.codigo }"><i class="fa fa-th-list fa-fw"></i>Listar</a>
                                 </li>
                                 <li>
                                     <a href="#" data-toggle="modal" data-target="#ModalCadTipoOs"><i class="fa fa-star fa-fw"></i>Novo tipo O.S</a>
@@ -129,22 +145,22 @@
                                     <a href="cadCliente.jsp"><i class="fa fa-plus-circle fa-fw"></i>Cadastrar</a>
                                 </li>
                                 <li>
-                                    <a href="cliente?acao=listar"><i class="fa fa-th-list fa-fw"></i>Listar</a>
+                                    <a href="cliente?acao=listar&cdFilial=${user.filial.codigo }"><i class="fa fa-th-list fa-fw"></i>Listar</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
                         
-                        <c:if test="${user.cargo.codigo == 1 }">
+                
                         
                         <li>
                             <a href="#"><i class="fa fa-user fa-fw"></i> Usuários<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                        
+                        			<c:if test="${user.cargo.codigo == 1 || user.cargo.codigo == 2 }">
                         				 <li>
                                         	<a href="funcionario?acao=carregar&cdDespachante=${user.filial.despachante.codigo }&cdFilial=${user.filial.codigo }"><i class="fa fa-plus-circle fa-fw"></i>Novo Usuário</a>
                                         </li>
-                        				
+                        			</c:if>	
                                         <li>
                                             <a href="funcionario?acao=listarFun&cdFilial=${user.filial.codigo }"><i class="fa fa-th-list fa-fw"></i>Listar</a>
                                         </li>
@@ -153,8 +169,8 @@
                             <!-- /.nav-second-level -->
                         </li>
                         
-                        </c:if>
-                        
+                
+                         <c:if test="${user.cargo.codigo == 1 || user.cargo.codigo == 2}" >
                         <li>
                             <a href="#"><i class="fa fa-gears fa-fw"></i> Configurar <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -178,7 +194,7 @@
                                             <a href="#" data-toggle="modal" data-target="#ModalcadCargo"><i class="fa fa-plus-circle fa-fw"></i>Novo</a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="fa fa-th-list fa-fw"></i>Listar</a>
+                                            <a href="cargo?acao=listar"><i class="fa fa-th-list fa-fw"></i>Listar</a>
                                         </li>
                                     </ul>
                                     <!-- /.nav-third-level -->
@@ -191,7 +207,7 @@
                                             <a href="#" data-toggle="modal" data-target="#ModalcadFormaPagamento"><i class="fa fa-plus-circle fa-fw"></i>Novo</a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="fa fa-th-list fa-fw"></i>Listar</a>
+                                            <a href="formaPagamento?acao=listar"><i class="fa fa-th-list fa-fw"></i>Listar</a>
                                         </li>
                                     </ul>
                                     <!-- /.nav-third-level -->
@@ -204,7 +220,7 @@
                                             <a href="#" data-toggle="modal" data-target="#ModalCadTipoOs"><i class="fa fa-plus-circle fa-fw"></i>Novo</a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="fa fa-th-list fa-fw"></i>Listar</a>
+                                            <a href="tipoOs?acao=listar"><i class="fa fa-th-list fa-fw"></i>Listar</a>
                                         </li>
                                     </ul>
                                     <!-- /.nav-third-level -->
@@ -214,10 +230,10 @@
                                     <a href="#">Tipo Veiículo <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
-                                            <a href="" data-toggle="modal" data-target="#ModalCadTipoVeiculo"><i class="fa fa-plus-circle fa-fw"></i>Novo</a>
+                                            <a href="#" data-toggle="modal" data-target="#ModalCadTipoVeiculo"><i class="fa fa-plus-circle fa-fw"></i>Novo</a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="fa fa-th-list fa-fw"></i>Listar</a>
+                                            <a href="tipoVeiculo?acao=listar"><i class="fa fa-th-list fa-fw"></i>Listar</a>
                                         </li>
                                     </ul>
                                     <!-- /.nav-third-level -->
@@ -229,7 +245,7 @@
                                             <a href="" data-toggle="modal" data-target="#ModalCadTipoStatus"><i class="fa fa-plus-circle fa-fw"></i>Novo</a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="fa fa-th-list fa-fw"></i>Listar</a>
+                                            <a href="status?acao=listar"><i class="fa fa-th-list fa-fw"></i>Listar</a>
                                         </li>
                                     </ul>
                                     <!-- /.nav-third-level -->
@@ -237,7 +253,7 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        
+                        </c:if>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

@@ -40,15 +40,17 @@ public class PessoaDAO {
 	}
 	
 	public void atualizar(Pessoa pes, Connection c)throws Exception{
-		String sql = "UPDATE T_DESP_PESSOA SET nm_pessoa = ?"
+		String sql = "UPDATE T_DESP_PESSOA SET nm_pessoa = ?, ds_email = ? "
 				+ "WHERE cd_pessoa = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
 		
 		estrutura.setString(1, pes.getNome());
-		estrutura.setInt(2, pes.getCodigo());
+		estrutura.setString(2, pes.getUsuario().getEmail());
+		estrutura.setInt(3, pes.getCodigo());
 		estrutura.execute();
 		estrutura.close();
 		EnderecoBO.atualizar(pes.getEndereco(), c, pes.getCodigo());
+		TelefoneBO.atualizar(pes.getTelefone(), c);
 	}
 	
 	public void excluir(Pessoa pes, Connection c)throws Exception{
