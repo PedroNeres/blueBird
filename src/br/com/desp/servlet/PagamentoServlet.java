@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import br.com.desp.beans.Cheque;
 import br.com.desp.beans.Pagamento;
@@ -72,7 +73,7 @@ public class PagamentoServlet extends HttpServlet {
 			
 			int cdFilial = Integer.parseInt(req.getParameter("cdFilail"));
 			
-			pags = PagamentoBO.listarPagAberto(c);
+			pags = PagamentoBO.listarPagAberto(cdFilial, c);
 			tiposOrdem = TipoOrdemBO.listar(c);
 			tiposVeiculos = TipoVeiculoBO.listar(c);
 			cheques = ChequeBO.listarPendentes(cdFilial, c);
@@ -114,6 +115,13 @@ public class PagamentoServlet extends HttpServlet {
 			
 			PagamentoBO.aprovarTodos(c);
 			
+			int cdFilial = Integer.parseInt(req.getParameter("cdFilial"));
+			
+			List<Pagamento> pagamentos = PagamentoBO.listarPagAberto(cdFilial, c);
+			
+			HttpSession sessao = req.getSession();
+			sessao.setAttribute("pagAberto", pagamentos);
+			
 			req.setAttribute("msg", "Todos os pagamentos foram aprovados");
 			
 			c.commit();
@@ -130,7 +138,7 @@ public class PagamentoServlet extends HttpServlet {
 	private void aprovarPag(HttpServletRequest req) {
 		// TODO Auto-generated method stub
 		
-Connection c = null;
+		Connection c = null;
 		
 		try {
 			
@@ -140,6 +148,12 @@ Connection c = null;
 			int cdPagamento = Integer.parseInt(req.getParameter("cdPagamento"));
 			
 			PagamentoBO.aprovar(cdPagamento, c);
+			
+			int cdFilial = Integer.parseInt(req.getParameter("cdFilial"));
+			
+			List<Pagamento> pag = PagamentoBO.listarPagAberto(cdFilial, c);
+			req.setAttribute("pagAberto", pag);
+			
 			req.setAttribute("msg", "Pagamento aprovado com sucesso!");
 			
 			c.commit();

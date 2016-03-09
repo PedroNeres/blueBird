@@ -69,7 +69,7 @@ public class FilialDAO {
 			fil.setStatus(pes.getStatus());
 			fil.setTelefone(pes.getTelefone());
 			fil.setUsuario(pes.getUsuario());
-			Despachante desp = DespachanteBO.pesqCodigo(fil.getDespachante().getCodigo(), c);
+			Despachante desp = DespachanteBO.pesqCodigo(rs.getInt("cd_despachante"), c);
 			fil.setDespachante(desp);
 			filiais.add(fil);
 			if(fil.getStatus() == 0){

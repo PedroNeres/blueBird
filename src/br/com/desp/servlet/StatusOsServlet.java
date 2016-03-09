@@ -93,15 +93,13 @@ Connection c = null;
 		try{
 			c = ConexaoFactory.controlarInstancia().getConnection();
 			
-			List<Pagamento> pags = new ArrayList<Pagamento>();
+		
 			List<TipoOrdemServico> tiposOrdem = new ArrayList<TipoOrdemServico>();
 			List<TipoVeiculo> tiposVeiculos = new ArrayList<TipoVeiculo>();
-			
-			pags = PagamentoBO.listarPagAberto(c);
+		
 			tiposOrdem = TipoOrdemBO.listar(c);
 			tiposVeiculos = TipoVeiculoBO.listar(c);
-			
-			req.setAttribute("pagAberto", pags);
+
 			req.setAttribute("tpVeiculo", tiposVeiculos);
 			req.setAttribute("tpOrdem", tiposOrdem);
 			

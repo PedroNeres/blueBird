@@ -56,8 +56,8 @@ public abstract class PagamentoBO {
 		return new PagamentoDAO().listarPagOs(nrOrdem, c);
 	}
 	
-	public static List<Pagamento> listarPagAberto(Connection c)throws Exception{
-		return new PagamentoDAO().listarPagAber(c);
+	public static List<Pagamento> listarPagAberto(int cdFilial, Connection c)throws Exception{
+		return new PagamentoDAO().listarPagAber(cdFilial, c);
 	}
 	
 	public static Pagamento pesqCodigo(int cdPagamento, Connection c)throws Exception{

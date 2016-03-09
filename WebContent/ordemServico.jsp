@@ -49,6 +49,9 @@
 		</div>
        <%@include file="topo.jsp" %>
 	
+              
+        <%@include file="addPagamento.jsp" %>
+        <%@include file="addServOs.jsp" %>
             
 
         <div id="page-wrapper">
@@ -64,15 +67,21 @@
 		</c:if>
           	</div>   
           	
+          
           	
             <div class="row">
+            	<div class="col-lg-1"></div>
             
                 <div class="col-lg-10">
                 
                 <div class="row">
                 
-          			<div class="col-md-5"></div>
-          			<a href="ordemServico?acao=imprimir&numero=${os.numero }" target="_blank" class="col-md-2 btn btn-primary">Imprimir</a>
+          			<div class="col-md-4"></div>
+          			<a href="ordemServico?acao=imprimir&numero=${os.numero }" target="_blank" class="btn btn-primary">Imprimir</a>
+               		<c:if test="${os.total - os.vlrPago > 0 }">
+               			<a href="#" data-toggle="modal" data-target="#ModalAddPagamento${os.numero }" class="btn btn-success">Add Pagamento</a>
+               		</c:if>
+               		<a href="#" data-toggle="modal" data-target="#ModalAddServOs" class="btn btn-default">Add Serviço</a>
                 </div>
                 <br>
                 
@@ -240,7 +249,7 @@
             </div>
         </div>   
         <!-- /#page-wrapper -->
-
+      
     <!-- /#wrapper -->
 
     <!-- jQuery -->
@@ -265,6 +274,24 @@
     		window.print()
     	});
     </script>
+    
+    <script type="text/javascript">
+	
+    $(".dtCheque").hide();
+    
+    
+    
+    $("#pDatado").click(function(){
+    	if($("#pDatado").is(":checked") == true){
+        	$(".dtCheque").fadeIn(1000);
+        }else{
+        	$(".dtCheque").fadeOut(1000);
+        }
+    });
+    
+    
+
+	</script>
     
 </body>
 

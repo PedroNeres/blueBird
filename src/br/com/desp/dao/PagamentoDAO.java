@@ -64,11 +64,13 @@ public class PagamentoDAO {
 		estrutura.close();
 	}
 	
-	public List<Pagamento> listarPagAber(Connection c)throws Exception{
+	public List<Pagamento> listarPagAber(int cdFilial, Connection c)throws Exception{
 		List<Pagamento> pagamentos = new ArrayList<Pagamento>();
 		Pagamento pag = null;
-		String sql = "SELECT * FROM T_DESP_PAGAMENTO WHERE nr_status = 0";
+		String sql = "SELECT * FROM T_DESP_PAGAMENTO PAG INNER JOIN T_DESP_ORDEM_SERVICO OS ON(PAG.NR_ORDEM = OS.NR_ORDEM) INNER JOIN "
+				+ "T_DESP_FUNCIONARIO FUN ON(OS.CD_FUNCIONARIO = FUN.CD_FUNCIONARIO) INNER JOIN T_DESP_FILIAL FIL ON(FUN.CD_FILIAL = FIL.CD_FILIAL) WHERE PAG.nr_status = 0 AND FIL.cd_filial = ?";
 		PreparedStatement estrutura = c.prepareStatement(sql);
+		estrutura.setInt(1, cdFilial);
 		ResultSet rs = estrutura.executeQuery();
 		while(rs.next()){
 			pag = new Pagamento();
@@ -76,9 +78,7 @@ public class PagamentoDAO {
 			pag.setForPagamento(FormaPagamentoBO.pesqCodigo(rs.getInt("cd_forma_pagamento"), c));
 			pag.setNumero(rs.getString("nr_identificacao"));
 			pag.setObservacoes(rs.getString("ds_observacao"));
-			System.out.println("teste");
 			pag.setOrdemServico(OrdemServicoBO.pesqNumeroOs(rs.getInt("nr_ordem"), c));
-			System.out.println("teste1");
 			pag.setStatus(rs.getInt("nr_status"));
 			pag.setVlPagao(rs.getDouble("vl_pago"));
 			pagamentos.add(pag);

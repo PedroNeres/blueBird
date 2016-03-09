@@ -10,9 +10,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import br.com.desp.beans.Cliente;
 import br.com.desp.beans.Endereco;
+import br.com.desp.beans.OrdemServico;
 import br.com.desp.beans.Pagamento;
 import br.com.desp.beans.Telefone;
 import br.com.desp.beans.TipoOrdemServico;
@@ -84,16 +86,13 @@ Connection c = null;
 		
 		try{
 			c = ConexaoFactory.controlarInstancia().getConnection();
-			
-			List<Pagamento> pags = new ArrayList<Pagamento>();
+
 			List<TipoOrdemServico> tiposOrdem = new ArrayList<TipoOrdemServico>();
 			List<TipoVeiculo> tiposVeiculos = new ArrayList<TipoVeiculo>();
 			
-			pags = PagamentoBO.listarPagAberto(c);
 			tiposOrdem = TipoOrdemBO.listar(c);
 			tiposVeiculos = TipoVeiculoBO.listar(c);
-			
-			req.setAttribute("pagAberto", pags);
+		
 			req.setAttribute("tpVeiculo", tiposVeiculos);
 			req.setAttribute("tpOrdem", tiposOrdem);
 			
@@ -119,6 +118,10 @@ Connection c = null;
 				retorno = "verVeiculo.jsp";
 				req.setAttribute("msg", "Cliente ja cadastrado, conclua a solicitação de O.S");
 			}
+			
+			HttpSession sessao = req.getSession();
+			OrdemServico os = new OrdemServico();
+			sessao.setAttribute("os", os);
 			
 		}catch(Exception e){
 			e.printStackTrace();

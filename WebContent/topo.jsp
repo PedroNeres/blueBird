@@ -20,8 +20,10 @@
             <!-- /.navbar-header -->
 
 			<ul class="nav navbar-nav">
-			 <li><a href="#">Caixa</a>
-       		 <li><a href="#">Relatórios</a></li>
+			<c:if test="${user.cargo.codigo < 3 }">
+			 <li><a href="caixa?acao=listarFilial&cdFilial=${user.filial.codigo }">Caixa</a>
+       		 <li><a href="caixa?acao=listarRelatorio&cdFilial=${user.filial.codigo }">Relatórios</a></li>
+       		</c:if>
        		 <li class="dropdown">
        		 	<a href="#" class="dropdown-toggle" data-toggle="dropdown" 
        		 		role="button" aria-haspopup="true" aria-expanded="false">Ajuda <span class="caret"></span></a>

@@ -24,6 +24,7 @@ import br.com.desp.beans.ItemServico;
 import br.com.desp.beans.MudarStatus;
 import br.com.desp.beans.OrdemServico;
 import br.com.desp.beans.Pagamento;
+import br.com.desp.beans.Servico;
 import br.com.desp.beans.StatusOs;
 import br.com.desp.beans.Veiculo;
 import br.com.desp.bo.ChequeBO;
@@ -31,6 +32,7 @@ import br.com.desp.bo.ClienteBO;
 import br.com.desp.bo.EntradaBO;
 import br.com.desp.bo.FormaPagamentoBO;
 import br.com.desp.bo.FuncionarioBO;
+import br.com.desp.bo.ItemServicoBO;
 import br.com.desp.bo.OrdemServicoBO;
 import br.com.desp.bo.PagamentoBO;
 import br.com.desp.bo.ServicoBO;
@@ -149,7 +151,7 @@ public class OrdemServicoServlet extends HttpServlet {
 			Entrada ent = new Entrada();
 			ent.setCodigo(0);
 			ent.setDescricao("Pagamento adicionado da O.S nº" + ordemServico.getNumero());
-			ent.setDtEntrada(ordemServico.getDtEntrada());
+			ent.setDtEntrada(Calendar.getInstance());
 			ent.setValor(vlPagao);
 			ent.setFilial(ordemServico.getAtendente().getFilial());
 			EntradaBO.cadastrar(ent, c);
@@ -185,11 +187,18 @@ public class OrdemServicoServlet extends HttpServlet {
 			
 			OrdemServico os = OrdemServicoBO.pesqNumeroOs(codigo, c);
 			
-			Calendar cal = Calendar.getInstance();
+			
 			SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy");
-			String dataString = s.format(cal.getTime());
+			String dataString = s.format(os.getDtEntrada().getTime());
 			dataString = DataUtil.DataExtenso(dataString);
 			String valorStr = NumeroUtil.strExtenso(os.getTotal());
+			
+			List<FormaPagamento> fo = FormaPagamentoBO.listar(c);
+			
+			List<Servico> servicos = ServicoBO.listar(c);
+			
+			req.setAttribute("servicos", servicos);
+			req.setAttribute("formasPag", fo);
 			req.setAttribute("valorStr", valorStr);
 			req.setAttribute("strDtHoje", dataString);
 			
@@ -457,8 +466,48 @@ public class OrdemServicoServlet extends HttpServlet {
 			listar(req);
 			retorno = "listaOs.jsp";
 			break;
+		case "adicServi":
+			adicServ(req);
+			abrir(req);
+			retorno = "ordemServico.jsp";
+			break;
 		}
 		req.getRequestDispatcher(retorno).forward(req, resp);
+	}
+
+	private void adicServ(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		
+		Connection c = null;
+		
+		try {
+			c = ConexaoFactory.controlarInstancia().getConnection();
+			c.setAutoCommit(false);
+			
+			ItemServico itemServ = new ItemServico();
+			itemServ.setCodigo(0);
+			itemServ.setOs(OrdemServicoBO.pesqNumeroOs(Integer.parseInt(req.getParameter("codigo")), c));
+			itemServ.setQuantidade(1);
+			itemServ.setServico(ServicoBO.pesqCodigo(Integer.parseInt(req.getParameter("serCodigo")), c));
+			itemServ.setVlrTotal(itemServ.getServico().getVlrTotal() * itemServ.getQuantidade());
+			
+			ItemServicoBO.cadastrar(itemServ, c);
+			
+			OrdemServico os = OrdemServicoBO.pesqNumeroOs(Integer.parseInt(req.getParameter("codigo")), c);
+			os.setTotal(os.getTotal() + itemServ.getVlrTotal());
+			
+			OrdemServicoBO.editar(os, c);
+			
+			req.setAttribute("msg", "Serviço adicionado com sucesso");
+			
+			c.commit();
+			c.setAutoCommit(true);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void alterarStatus(HttpServletRequest req) {
@@ -538,6 +587,9 @@ public class OrdemServicoServlet extends HttpServlet {
 			ent.setDtEntrada(os.getDtEntrada());
 			ent.setValor(os.getVlrPago());
 			ent.setFilial(os.getAtendente().getFilial());
+			
+			List<Pagamento> pagamentos = PagamentoBO.listarPagAberto(os.getAtendente().getFilial().getCodigo(), c);
+			sessao.setAttribute("pagAberto", pagamentos);
 			
 			EntradaBO.cadastrar(ent, c);
 			

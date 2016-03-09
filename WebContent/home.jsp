@@ -171,7 +171,7 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-right" role="menu">
-                                        <li><a href="pagamento?acao=aprovarTodos">Aprovar Todas</a>
+                                        <li><a href="pagamento?acao=aprovarTodos&cdFilial=${user.filial.codigo }">Aprovar Todas</a>
                                         </li>
                                         <li><a href="pagamento?acao=listar">Exibir detalhes</a>
                                         
@@ -205,7 +205,7 @@
                                                     <td><fmt:formatNumber>${pag.vlPagao }</fmt:formatNumber></td>
                                                     <td>${pag.forPagamento.descricao }</td>
                                                     <td>${pag.ordemServico.atendente.nome }</td>
-                                                    <td><a href="pagamento?acao=aprovarPag&cdPagamento=${pag.codigo }" class="fa fa-check" title="Aprovar"></a></td>
+                                                    <td><a href="pagamento?acao=aprovarPag&cdPagamento=${pag.codigo }&cdFilial=${user.filial.codigo }" class="fa fa-check" title="Aprovar"></a></td>
                                                 </tr>  
                                             </c:forEach>                                            
                                             </tbody>

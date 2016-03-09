@@ -83,9 +83,14 @@ public class UsuarioServlet extends HttpServlet {
 			HttpSession sessao = req.getSession();
 			
 			String email = req.getParameter("email");
+			
+			Usuario usu = new Usuario();
+			usu.setEmail(email);
+			
+			Funcionario fun = FuncionarioBO.pesqEmail(usu, c);
 		
 			
-			pags = PagamentoBO.listarPagAberto(c);
+			pags = PagamentoBO.listarPagAberto(fun.getFilial().getCodigo(),c);
 			tiposOrdem = TipoOrdemBO.listar(c);
 			tiposVeiculos = TipoVeiculoBO.listar(c);
 			
